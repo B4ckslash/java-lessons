@@ -1,0 +1,8 @@
+Create a new interface called 'Streamable' with the following methods:
+    stream()
+    getFilesize()
+    getRequiredBufferLength()
+    getType
+
+Implement the interface in at least two classes(I used the classes 'Audio' and 'Video')
+To check if your program does what it should, create a 'Streamer' class which creates a new Instance of the two classes and calls their new Methods

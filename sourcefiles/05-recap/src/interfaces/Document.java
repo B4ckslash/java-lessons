@@ -1,6 +1,6 @@
 package interfaces;
 
-public class Document {
+public class Document implements Scannable{
     private String content;
     private int lengthChars;
     private String title;
@@ -13,8 +13,19 @@ public class Document {
     }
 
     public void append(String text) {
+        if(this.content == null) this.content = "";
         this.content += text;
         this.lengthChars += text.length();
+    }
+
+    @Override
+    public String scan() {
+        return content;
+    }
+
+    @Override
+    public int getLength() {
+        return lengthChars;
     }
 
     public void append(int i) {

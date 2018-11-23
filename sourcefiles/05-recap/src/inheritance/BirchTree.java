@@ -1,20 +1,11 @@
 package inheritance;
 
-public class BirchTree extends Plant {
-    private int trunkDiameter;
-    private boolean isEvergreen;
+public class BirchTree extends Tree {
     private boolean hasLeaves;
 
-    public BirchTree(int trunkDiameter, boolean hasLeaves) {
-        this.trunkDiameter = trunkDiameter;
-        this.isEvergreen = false;
+    public BirchTree(int trunkDiameter, boolean hasLeaves, String name) {
+        super(trunkDiameter, name, false);
         this.hasLeaves = hasLeaves;
-    }
-
-    @Override
-    public void grow() {
-        super.grow();
-        this.trunkDiameter++;
     }
 
     public void loseLeaves() {

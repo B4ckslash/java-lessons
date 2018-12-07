@@ -2,11 +2,11 @@ package generics;
 
 public abstract class Drink {
 
-    private float volume, density;
+    private float volumeMilliliter, density;
     private boolean isCarbonated;
 
     public Drink(float volume, float density, boolean isCarbonated) {
-        this.volume = volume;
+        this.volumeMilliliter = volume;
         this.density = density;
         this.isCarbonated = isCarbonated;
     }
@@ -19,8 +19,8 @@ public abstract class Drink {
         this.density = density;
     }
 
-    public float getVolume() {
-        return volume;
+    public float getVolumeMilliliter() {
+        return volumeMilliliter;
     }
 
     public float getDensity() {
@@ -33,8 +33,8 @@ public abstract class Drink {
 
     public Drink mixWith(Drink drink) {
         boolean isNewDrinkCarbonated = isCarbonated() || drink.isCarbonated();
-        float newVolume = this.getVolume() + drink.getVolume();
-        float newDensity = ((this.getDensity()*this.getVolume()) + (drink.getDensity()*drink.getVolume()))/newVolume;
+        float newVolume = this.getVolumeMilliliter() + drink.getVolumeMilliliter();
+        float newDensity = ((this.getDensity()*this.getVolumeMilliliter()) + (drink.getDensity()*drink.getVolumeMilliliter()))/newVolume;
         
         return new Drink(newVolume, newDensity, isNewDrinkCarbonated) {};
     }

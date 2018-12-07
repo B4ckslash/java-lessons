@@ -14,6 +14,11 @@ public class Bottle {
     }
 
     public void fillWith(Drink drink) {
-        this.drink = drink;
+        if(this.drink != null) {
+            Drink newDrink = this.drink.mixWith(drink);
+            this.drink = newDrink;
+        } else {
+            this.drink = drink;
+        }
     }
 }

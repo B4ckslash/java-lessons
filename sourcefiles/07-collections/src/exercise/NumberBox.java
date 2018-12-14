@@ -4,7 +4,7 @@ public class NumberBox {
     private Number content;
 
     public NumberBox() {
-        this.content = 0;
+        this.content = null;
     }
 
     public Number emptyBox() {
@@ -13,7 +13,7 @@ public class NumberBox {
         return ret;
     }
 
-    public void putInBox(Number number) {
-        if(this.content == null) this.content = number;
+    public void putInBox(Number t) {
+        if(this.content == null) this.content = t;
     }
 }

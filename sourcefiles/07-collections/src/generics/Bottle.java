@@ -1,24 +1,24 @@
 package generics;
 
-public class Bottle {
-    private Drink drink;
+public class Bottle<T extends Drink> {
+    private T drink;
 
-    public Bottle(Drink drink) {
+    public Bottle(T drink) {
         this.drink = drink;
     }
 
-    public Drink emptyBottle() {
-        Drink ret = this.drink;
+    public T emptyBottle() {
+        T ret = this.drink;
         this.drink = null;
         return ret;
     }
 
-    public void fillWith(Drink drink) {
+    /*public void fillWith(T drink) {
         if(this.drink != null) {
-            Drink newDrink = this.drink.mixWith(drink);
+            T newDrink = this.drink.mixWith(drink);
             this.drink = newDrink;
         } else {
             this.drink = drink;
         }
-    }
+    }*/
 }

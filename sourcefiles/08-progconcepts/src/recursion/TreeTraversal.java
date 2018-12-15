@@ -18,6 +18,11 @@ public class TreeTraversal {
     }
 
     private static void printTree(BinaryNode root) {
-        
+       System.out.print(root.getData() + " ");
+
+        if(root.isLeaf()) return; //basecase
+
+       printTree(root.getLeftChild()); //recursive call
+       printTree(root.getRightChild());
     }
 }

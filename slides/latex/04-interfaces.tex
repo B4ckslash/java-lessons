@@ -1,0 +1,415 @@
+\input{../templates/course_definitions}
+\input{../templates/course_information}
+\usepackage{csquotes}
+\usepackage{mathtools}
+
+\title{Java}
+\subtitle{Interfaces \& Polymorphie}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Overview}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \tableofcontents
+\end{frame}
+
+\section{Konstruktoren mit \texttt{super}}
+\begin{frame}[fragile]{\texttt{super()}}
+    Ein Konstruktor erzeugt eine neue Instanz einer Klasse. \\
+    Er ist sozusagen eine namenlose Methode mit dem return type <Klassenname>:
+    \begin{lstlisting}[gobble=8]
+        public class Test {
+            private int myInt;
+            private String myString;
+
+            public Test(int myInt) {
+                this.myInt = myInt;
+            }
+
+            public void setMyString(String myString) {
+                this.myString = myString;
+            }
+        }
+        [...]
+        Test t = new Test(5);
+        [...]
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{super()}}
+    Der \texttt{super()}-Aufruf ist nichts anderes als ein Aufruf des Konstruktors der Superklasse. \\
+    Dies ist nötig, da jede Subklasse automatisch eine Instanz ihrer Superklasse ist, welche vorher instanziert werden muss.
+    \begin{lstlisting}[gobble=8]
+        public class SubTest extends Test {
+            private char myChar;
+            // visible Attributes: myInt, myString, myChar
+            public SubTest(int myInt, char myChar) {
+                super(myInt); // calls the constructor with the myInt param of the SubTest constructor
+                this.myChar = myChar;
+                this.setMyString("My String");
+            }
+        }
+    \end{lstlisting}
+    Anders als ein normaler Aufruf des Konstruktors mittels \texttt{new} muss das \texttt{super()}-Statement keiner Referenz zugewiesen werden.
+\end{frame}
+
+\section{Weitere Kontrollstatements}
+\subsection{switch}
+\begin{frame}[fragile]{\texttt{if-else-if-else...}}
+	\begin{lstlisting}[gobble=8]
+        public static void main (String[] args) {
+            int address = 2;
+                
+            if (address == 1) {
+                System.out.println("Dear Sir,");	    
+            } else if (address == 2) {
+                System.out.println("Dear Madam,");		    
+            } else if (address == 4) {
+                System.out.println("Dear Friend,");		    
+            } else {
+                System.out.println("Dear Sir/Madam,");	
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{switch-case-default}}
+	\begin{lstlisting}[gobble=8]
+        public static void main (String[] args) {
+            int address = 2;
+            
+            switch(address) {
+                case 1:
+                    System.out.println("Dear Sir,");
+                    break;
+                case 2:
+                    System.out.println("Dear Madam,");
+                    break;
+                case 4:
+                    System.out.println("Dear Friend,");
+                    break; 
+                default:
+                    System.out.println("Dear Sir/Madam,");
+                    break;
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{switch-case-default}}
+	Um eine komplexe Verzweigung aufgrund einer Variable zu realisieren, kann man \texttt{switch} verwenden.
+    Dies funktioniert mit allen primitiven Datentypen und \texttt{String}. \\
+	\vfill
+    Die gegebene Variable wird mit dem Wert hinter dem Keyword \texttt{case} verglichen.
+    Falls die Werte übereinstimmen, wird in den jeweiligen Block gesprungen.
+    Falls keiner der Werte passt, wird der \texttt{default}-Block ausgeführt.
+	\begin{lstlisting}[gobble=8]
+        public static void main (String[] args) {
+            switch(intVariable) {
+                case 1:
+                    doSomething();
+                    break;
+                default:
+                    doOtherThings();
+                    break;
+            }
+        }
+	\end{lstlisting}
+    \end{frame}
+\begin{frame}[fragile]{\texttt{break}}
+    \lstset{moredelim=[is][\textcolor{red}]{|}{|}}
+    Nach dem letzten Statement des \texttt{case}-Blocks kann man mithilfe von \texttt{break} die Verzweigung verlassen.\\
+    Ohne \texttt{break} wird das Programm auch den folgenden Block ausführen, egal ob ein neuer \texttt{case}-Block beginnt.
+	\begin{lstlisting}[gobble=8]
+        public static void main (String[] args) {
+            switch( 1 ) {
+                case 1:
+                    System.out.println("enter case 1"); //prints
+                case 2:
+                    System.out.println("enter case 2"); //prints as well
+                    |break;|
+                default:
+                    System.out.println("enter default case"); //doesn't print
+                    |break;|
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{return}
+    Methoden mit dem return type \texttt{void} brauchen nicht zwingend ein \texttt{return}-Statement.
+    Man kann jedoch mithilfe von \texttt{return} die Ausführung der Methode sofort beenden:
+	\begin{lstlisting}[gobble=8]
+        public void setNumber(int number) {
+            if(number < 0) return; // does not set the number if it's less than 0
+            this.number = number;
+        }
+	\end{lstlisting}
+\end{frame}
+
+\section{\texttt{static}}
+\begin{frame}[fragile]{\texttt{static}}
+    \lstset{moredelim=[is][\textcolor{red}]{|}{|}}
+    \onslide<+->{Ein Objekt ist eine Instanz einer Klasse, wobei die Klasse die Attribute und Methoden des Objekts definiert.
+    Das Objekt ist sozusagen eine konkrete Umsetzung und die Klasse nur ein \enquote{Bauplan}.}
+	\vfill
+    \onslide<+->{Statische Attribute und Methoden sind nicht and eine bestimmte Instanz(d.h. ein Objekt) der Klasse gebunden.
+    Dadurch kann auch die Klasse an sich \enquote{aktiv} sein.}
+    \vfill
+    \onslide<+->{Ein statischer Member(d.h. Klassen-Methoden und Klassen-Attribute) ist durch das Keyword \texttt{static} gekennzeichnet:}
+    \pause
+    \begin{lstlisting}[gobble=8]
+        public |static| void main(String[] args) {}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Klassen-Variablen}
+	Im folgenden Setter wird auf \texttt{count} via \texttt{Example.count} zugegriffen.
+    \texttt{this.count} ist in dem Fall falsch, da \texttt{count} der Klasse \enquote{gehört}.	
+    \begin{lstlisting}[gobble=8]
+        public class Example {
+            public static count;
+
+            public setCount(int count) {
+                Example.count = count;
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Klassen-Variablen}
+    Der folgende Test gibt \texttt{Example.count} aus, welche durch die Instanzen von \texttt{Example} verändert wird:
+	\begin{lstlisting}[gobble=8]
+        public class ExampleTest {
+            public static void main (String[] args) {
+                Example e1 = new Example();
+                Example e2 = new Example();
+                
+                e1.setCount(4);
+                System.out.println(Example.count); // prints: 4
+                e2.setCount(8);
+                System.out.println(Example.count); // prints: 8
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Klassen-Methoden}
+    Statische Methoden können ohne Objekt aufgerufen werden.
+    Sie können Klassen-Variablen, aber nicht die Attribute von Objekten verändern.
+    \begin{lstlisting}[gobble=8]
+        public class Example {
+            public static count;
+            private String objAttr;
+
+            public static void setCount(int count) {
+                Example.count = count;
+            }
+
+            public static void setObjAttr(String attr) {
+                objAttr = attr; //this will produce an error at compile-time
+            }
+        }
+	\end{lstlisting}
+    \begin{lstlisting}[gobble=8]
+        public static void main (String[] args) {
+            Example.setCount(4);
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{static} geht nur in eine Richtung}
+    Objektmethoden können:
+    \begin{itemize}[<+->]
+		\item auf Attribute zugreifen
+		\item auf Klassen-Variablen zugreifen
+		\item Methoden aufrufen
+		\item statische Methoden aufrufen
+	\end{itemize}
+    Klassen-Methoden können:
+    \begin{itemize}[<+->]
+		\item auf Klassen-Variablen zugreifen
+		\item statische Methoden aufrufen
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Was tun, wenn...?}
+    Was tun, wenn...
+    \begin{itemize}[<+->]
+        \item ...man einige Klassen hat, die gleiches Verhalten umsetzen? \\
+        \item [] \indent Die gemeinsamen Methoden in eine Superklasse auslagern!
+        \item ...man einige Klassen hat, die die gleichen Methoden umsetzen sollen, wobei die Umsetzung von der spezifischen Klasse abhängt?
+    \end{itemize}
+\end{frame}
+
+\section{Interfaces}
+\subsection{Überblick}
+\begin{frame}{Interfaces}
+    Ein \texttt{interface} ist eine fest definierte Vorschrift, die von Klassen \textit{implementiert} werden müssen.
+    Interfaces können die folgenden Dinge definieren: \\
+    \begin{itemize}[<+->]
+        \item Methodensignaturen
+        \item Klassen-Konstanten(Variablen mit den modifiers \texttt{static} und \texttt{final})
+        \item \texttt{default}-Methoden(seit Java 8)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Recap: Funktionssignaturen}
+    \begin{center} 
+    $
+    {\color{orange}\overbracket[1pt]{\texttt{\large{public static}}}^{\text{access\ modifiers}}\ }
+    {\color{blue}\underbracket[1pt]{\texttt{\large{void}}}_{\text{return\ type}}\ }
+    {\color{black}\overbracket[1pt]{\texttt{\large{main}}}^{\text{name}}\ }
+    {\color{gray}\underbracket[1pt]{\texttt{\large{(String[] args)}}}_{\text{parameter(s)}}}
+    $
+    \end{center}
+\end{frame}
+
+\subsection{Beispiel}
+\begin{frame}[fragile]{\texttt{interface} Trackable}
+    Ein simples Interface für einen Tracking-Service könnte folgendermaßen aussehen:
+    \begin{lstlisting}[gobble=8]
+        public interface Trackable {
+            public int getStatus(int identifier);
+            
+            public Position getPosition(int identifier);
+        }
+	\end{lstlisting}
+    \onslide<+->{Viele Interfaces enden mit dem Suffix \texttt{-able}.\\}
+    \onslide<+->{Alle Klassen, die dieses Interface implementieren, müssen diese beiden Methoden umsetzen.}
+\end{frame}
+\begin{frame}[fragile]{Letter implements Trackable}
+    \begin{lstlisting}[gobble=8]
+        public class Letter implements Trackable {
+            public Position position;
+            private int identifier;
+        
+            public int getStatus(int identifier) {
+                return this.identifier;
+            }
+            
+            public Position getPosition(int identifier) {
+                return this.position;
+            }
+        }
+	\end{lstlisting}
+	Die Klassen \texttt{Postcard} und \texttt{Package} implementieren auch \texttt{Trackable}.
+\end{frame}
+
+\subsection{Mehrere Interfaces}
+\begin{frame}[fragile]{Zwei Interfaces}
+    Eine Klasse kann zwei Interfaces implementieren:
+	\vfill
+    \begin{lstlisting}[gobble=8]
+        public interface Buyable {
+            // constant
+            public float tax = 1.19f; // automatically gets changed to public static final float ...
+        
+            public float getPrice();
+        }
+	\end{lstlisting}
+    \begin{lstlisting}[gobble=8]
+        public interface Trackable {
+            public int getStatus(int identifier);
+            
+            public Position getPosition(int identifier);
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Postcard implements Buyable, Trackable}
+    \begin{lstlisting}[gobble=8]
+        public class Postcard implements Buyable, Trackable {
+        
+            public Position position;
+            private int identifier;
+            private float priceWithoutVAT;
+            
+            public float getPrice() {
+                return priceWithoutVAT * tax;
+            }
+        
+            public int getStatus(int identifier) {
+                return this.identifier;
+            }
+            
+            public Position getPosition(int identifier) {
+                return this.position;
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+
+\section{Polymorphie}
+\subsection{Polymorphie mit Interfaces}
+\begin{frame}[fragile]{Zugriff auf Interfaces}
+    Man kann von einem Objekt verlangen, dass sie ein bestimmtes Interface umsetzt. \\
+    Hierzu wird der Name des Interfaces bei der Deklaration wie ein Objekt verwendet:
+    \begin{lstlisting}[gobble=8]
+        public static void main(String[] args) {
+            Trackable letter_1 = new Letter();
+            Trackable letter_2 = new Letter();
+            Trackable postcard_1 = new Postcard();
+            Trackable package_1 = new Package();
+            
+            letter_1.getPosition(2345);
+            postcard_1.getStatus(1234);
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Auf mehrere Interfaces zugreifen}
+    Falls eine Klasse mehrere Interfaces implementiert, kann man sich \enquote{aussuchen}, welches man verlangt:
+    \begin{lstlisting}[gobble=8]
+        public static void main(String[] args) {
+        
+            Trackable postcard_T = new Postcard();
+            Postcard postcard_P = new Postcard();
+            Buyable postcard_B = new Postcard();
+
+            postcard_T.getStatus(1234);
+            postcard_B.getPrice();
+            postcard_P.getStatus(1234);
+            postcard_P.getPrice();
+        }
+	\end{lstlisting}
+	\texttt{postcard\_P} kann beide Interfaces verwenden.\\
+    \texttt{postcard\_T} kann \texttt{Trackable} verwenden.\\
+    \texttt{postcard\_B} kann \texttt{Buyable} verwenden.
+\end{frame}
+
+\subsection{Polymorphie mit Vererbung}
+\begin{frame}[fragile]{Polymorphie mit Vererbung}
+    Ähnlich wie bei Interfaces kann man auch von Objekten verlangen, dass sie Unterklassen einer bestimmten Klasse sind. \\
+    Dazu kann man einer Referenz der Superklasse einfach eine Instanz einer passenden Unterklasse übergeben:
+    \begin{lstlisting}[gobble=8]
+        [...]
+            public static void main(String[] args) {
+                Delivery letter = new Letter();
+                Delivery package = new Package();
+               
+                letter.setAdress("Faculty of CS, Dresden");
+                package.setAdress("cafe ASCII, Dresden");
+
+                package.printAdress(); //prints "Faculty of CS, Dresden"
+                letter.printAdress(); //prints "a letter for cafe ASCII, Dresden"
+            }
+        [...]
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Limitierungen von Polymorphie}
+    Wenn man mit Polymorphie arbeitet, muss man auf einige Besonderheiten achten:
+    \begin{itemize}[<+->]
+        \item Man kann nur auf die Methoden zugreifen, die auch in dem jeweiligen Interface bzw. Superklasse definiert sind
+        \item Wenn man Polymorphie mit Vererbung verwendet, sollte man(falls nötig) die jeweilige Methode überschreiben (\texttt{@Override})
+    \end{itemize}
+\end{frame}
+
+\end{document}

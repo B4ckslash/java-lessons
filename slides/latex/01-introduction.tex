@@ -1,0 +1,484 @@
+\input{../templates/course_definitions}
+\input{../templates/course_information}
+\usepackage[ngerman]{babel}
+\usepackage{ulem}
+\usepackage{csquotes}
+
+\title{Java}
+\subtitle{Einführung}
+\date{\today}
+
+
+\begin{document}
+
+% \section{Organisation}
+\begin{frame}
+	\titlepage
+\end{frame}
+\begin{frame}{Überblick}
+	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents
+\end{frame}
+
+\section{Grundlegende Infos}
+\begin{frame}{Kursinformationen}
+% 	Language?\\
+	Voraussetzungen
+    \begin{itemize}[<+->]
+        \item Du weißt, wie du deinen Computer bedienst 
+        \item Du bringst deinen eigenen Laptop mit
+        \item Du hast das JDK und eventuell die IDE deiner Wahl bereits eingerichtet
+        \item Du hast eventuell schon Erfahrung mit anderen Programmiersprachen(nicht notwendig)
+% 		\item Java is not your first programming language or you are a fast learner
+	\end{itemize} 
+    \onslide<+->{Weiteres}
+    \begin{itemize}[<+->]
+		\item Es wird \textasciitilde14 Termine geben
+        \item Jeder Termin deckt \textasciitilde einen Themenbereich  ab
+        \item Zu den meisten Themen gibt es Übungsaufgaben die Du zuhause bearbeiten kannst
+	\end{itemize}
+\end{frame}
+
+% \subsection{Resources}
+\begin{frame}{Ein paar nützliche Ressourcen}
+    \begin{itemize}[<+->]
+		\item Bei Problemen den Tutor fragen \hfill \\
+            \url{Marcus.Koehler4@tu-dresden.de}
+		\item Das Auditorium \hfill \\
+			\url{http://auditorium.inf.tu-dresden.de}
+		\item StackOverflow, FAQs, Online-tutorials, ... \hfill \\
+		\item Offizielle Java-Dokumentation \hfill \\
+			\url{https://docs.oracle.com/javase/10/}
+        \item Programmierkurs-Mailinglist \url{programmierung@ifsr.de}
+%        \item Cyberspace (wednesday 5./6. DS)
+		\item Kurs-Repository \\
+			\url{https://github.com/B4ckslash/java-lessons}
+        \item Und natürlich, Google
+	\end{itemize}
+\end{frame}
+
+\section{Java-Überblick}
+\begin{frame}{Über Java}
+	% \tikzoverlay at (7cm,1.4cm) {
+	% 	\includegraphics[width=3cm, height=3cm]{res/logo-java.png}
+	% }
+	Pro:
+	\begin{itemize}
+		\item Syntax in der Tradition von ALGOL/C/C++
+        \item Entworfen für objektorientiertes Programmieren(OOP)
+		\item Plattformunabhängig (JVM)
+        \item Automatisches Speichermanagement
+		\item Keine zwingend nötigen externen Bibliotheken
+        \item[] $->$ Einfache und \sout{problemlose} problemarme Verwendung\footnotemark[1]
+	\end{itemize}
+    \footnotetext[1]{Größtenteils}
+\end{frame}
+
+\begin{frame}{Über Java}
+	% \tikzoverlay at (7cm,1.4cm) {
+	% 	\includegraphics[width=3cm, height=3cm]{res/logo-java.png}
+	% }
+	Kontra:
+	\begin{itemize}
+        \item Viele features der JVM/des JDK werden nur \\ selten benötigt (teilweise mit Java 9 behoben\footnotemark[1])
+		\item Langsamer als Maschinensprache
+		\item Keine echte Mehrfachvererbung
+		\item Schwache Generics
+		\item Eher schlechte Unterstützung für \\ andere Programmierparadigmen
+		\item[] $->$ Weder besonders schnell noch speicherfreundlich
+	\end{itemize}
+    \footnotetext[1]{Zumindest kann man die nicht benötigten Features aus einem custom JDK entfernen}
+\end{frame}
+
+\subsection{Ein erstes Programm}
+\begin{frame}{Hello World}
+  DEMO
+\end{frame}
+
+\begin{frame}[fragile]{Eine einfache Arbeitsumgebung(Linux/OS X)}
+  In einem neuen Terminal:
+    \begin{lstlisting}[language=bash]
+      mkdir myProgram
+      cd myProgram
+      # touch Hello.java -- eigentlich nicht nötig
+      vim Hello.java //spezifischer Editor ist egal\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Eine einfache Arbeitsumgebung(Windows)}
+    \begin{itemize}[<+->]
+        \item Methode 1: In einem neuen cmd-Fenster: \\
+            \begin{lstlisting}[language=bash]
+                mkdir myProgram
+                cd myProgram
+                notepad Hello.java\end{lstlisting}
+        \item Methode 2: Im Explorer einen neuen Ordner + eine neue Datei anlegen und mit Notepad öffnen
+    \end{itemize}
+\end{frame}
+\subsection{Hello World!}
+
+\begin{frame}[fragile]{Hello World!}
+	Eine leere Java-Klasse. \\
+    Java-Klassen müssen immer mit einem Großbuchstaben beginnen.
+    \begin{lstlisting}[gobble=4]
+    public class Hello {
+
+    }\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Hello World!}
+    Dieses kurze Programm schreibt \texttt{Hello World!} auf die Konsole:
+    \begin{lstlisting}[gobble=4]
+    public class Hello {
+        public static void main(String[] args) {
+            System.out.println("Hello World!");
+        }
+    }\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Das Programm starten}
+    Die Datei als Hello.java speichern \\ und dann folgende Befehle ausführen:
+   \begin{lstlisting}[language=bash, gobble=8]
+        javac Hello.java
+        java Hello\end{lstlisting}
+    Output:
+    \begin{lstlisting}[gobble=8] 
+        Hello World! \end{lstlisting}
+\end{frame}
+
+\subsection{Ein neues IntelliJ-Projekt erstellen}
+
+\begin{frame}{Hello World in einer IDE}
+   DEMO
+\end{frame}
+
+\section{Java-Basics}
+
+\begin{frame}[fragile]{Kommentare}
+    \begin{lstlisting}[gobble=4]
+    public class Hello {
+       // Outputs "Hello World!" to the console
+       public static void main(String[] args) {
+           System.out.println("Hello World!");
+       }
+    }\end{lstlisting}
+   Idealerweise sollte man seinen Code immer kommentieren. \\
+   Code wird oft häufiger gelesen als er geschrieben wird.
+   \begin{itemize}
+       \item \texttt{// Einzeiliger Kommentar}
+       \item \texttt{/* Mehrzeiliger \\
+           Kommentar*/}
+   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Kommentare}
+    Ein paar Guidelines für Kommentare:
+    \lstset{moredelim=[is][\sout]{|}{|}}
+    \begin{itemize}[<+->]
+        \item \enquote{Guter Code dokumentiert sich selbst}
+            \begin{itemize}
+                \item Aussagekräftige Namen wählen
+                \item Komplexe Codeblöcke in kleine, einfache Teile aufbrechen \\ 
+                    (-> Refactoring)
+            \end{itemize}
+        \item Keine offensichtlichen Infos wiederholen:
+            \begin{lstlisting}[gobble=12]
+            |// multipliziert y mit x|
+            int z = y * x;\end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Kommentare}
+    \begin{itemize}[<+->] 
+        \item Notwendige, aber nicht intuitive Workarounds sollten erklärt werden:\footnotemark
+            \begin{lstlisting}[gobble=12]
+            function addSetEntry(set, value) {   
+              /* 
+                 Don't return `set.add` because it's not chainable in IE 11.
+                   */  
+                     set.add(value);    
+                       return set;  
+            }\end{lstlisting}
+    \end{itemize}
+    \footnotetext[1]{Code snippet: \url{https://lodash.com/docs}}
+\end{frame}
+
+\subsection{Definitionen}
+
+\begin{frame}[fragile]{Code-Grundbausteine}
+    \lstset{moredelim=[is][\textcolor{mymauve}]{|}{|}}
+    \begin{lstlisting}[gobble=4]
+	public class Hello {
+	    // Calculates some stuff and outputs everything on the console
+	    public static void main(String[] args) {	        
+	        |int x;|
+	        |x = 9;|
+	        int y = 23;
+	        int z;
+	        z = x * y;
+	        
+	        |System.out.println(z);|
+	    }
+	}\end{lstlisting}
+    Jede Deklaration, Zuweisung \& jeder Methodenaufruf ist ein \textit{Statement}
+\end{frame}
+
+\begin{frame}[fragile]{Code-Grundbausteine}
+    Den vorherigen Code kann man leicht auf das folgende reduzieren:
+    \begin{lstlisting}[gobble=4]
+	public class Hello {
+	    // Calculates some stuff and outputs everything on the console
+	    public static void main(String[] args) {
+	        System.out.println(9 * 23);
+	    }
+	}\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Primitive Datentypen}
+	Java unterstützt folgende primitive Datentypen:
+    \begin{itemize}[<+->]
+        \item\texttt{boolean}, einen Wahrheitswert (entweder \texttt{true} oder \texttt{false})
+        \item\texttt{int}, eine 32-bit Ganzzahl(a.k.a. Integer)
+        \item\texttt{long}, einen 64-bit Integer
+        \item\texttt{float}, eine 32-bit Gleitkommazahl \\
+            (engl. floating point number)
+        \item\texttt{double}, eine 64-bit Gleitkommazahl
+        \item\texttt{char}, ein 16-bit Unicode Zeichen \\ (engl. character)
+        \item\texttt{void}, den leeren Typ (wird später gebraucht)
+	\end{itemize}
+    \onslide<+->{Es gibt außerdem noch zwei eher selten verwendete Datentypen:}
+    \begin{itemize}
+        \item<.-> \texttt{short}, einen 16-bit Integer
+        \item<.-> \texttt{byte}, einen 8-bit Integer
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Blöcke}
+    \lstset{moredelim=[is][\textcolor{red}]{|}{|}}
+    \begin{lstlisting}[gobble=4]
+    public class Hello |{|
+        public static void main(String[] args) {
+	    // prints a "Hello World!" on your console
+            System.out.println("Hello World!");
+	    }
+	|}|\end{lstlisting}
+    Alles zwischen \texttt{\{} und \texttt{\}} ist ein \textit{Block}. \\
+	Blöcke können geschachtelt werden.
+\end{frame}
+
+\begin{frame}[fragile]{Das Semikolon}
+    \lstset{moredelim=[is][\textcolor{red}]{|}{|}}
+	\begin{lstlisting}[gobble=4]
+	public class Hello {
+	    // prints a "Hello World!" on your console
+	    public static void main(String[] args) {
+	        System.out.println("Hello World!")|;|
+	    }
+	}
+	\end{lstlisting}
+    Jedes \textit{Statement} wird von einem Semikolon abgeschlossen. \\
+    \textit{Blöcke} müssen nicht mit einem Semikolon beendet werden.	
+\end{frame}
+
+
+\begin{frame}[fragile]{Variablennamen}
+    \begin{itemize}[<+->]
+		\item Variablennamen können mit einem beliebigen Buchstaben oder Unterstrich beginnen. \\
+            Für gewöhnlich beginnen sie mit einem kleinen Buchstaben(abhängig von lokalen Konventionen und coding styles).
+		\item Zusammengesetzte Namen sollten camelCase verwenden.
+		\item Variablennamen sollten aussagekräftig sein.
+	\end{itemize}
+    \begin{onlyenv}<+->
+        \begin{lstlisting}[gobble=4]
+        public class Calc {
+            public static void main(String[] args) {
+                int a = 0; // not very meaningful
+                float myFloat = 5.3f; // also not meaningful
+                int count = 7; // quite a good name
+
+                int rotationCount = 7; // there you go
+            }
+        }\end{lstlisting}
+    \end{onlyenv}
+\end{frame}
+
+\subsection{Berechnungen}
+
+\begin{frame}[fragile, allowframebreaks]{Berechnungen mit \texttt{int}}
+
+    Java unterstützt folgende Operationen nativ: \\
+    \smallskip
+	\begin{tabular}{ll}
+		Addition & \texttt{a + b;} \\
+		Subtraktion & \texttt{a - b;} \\
+		Multiplikation &\texttt{a * b;} \\
+		Division & \texttt{a / b;} \\
+        Modulo(Restdivision) & \texttt{a \% b;} \\
+		Inkrementierung & \texttt{a++;} \\
+		Dekrementierung & \texttt{a--;} \\
+	\end{tabular} \\
+    \smallskip
+    Weitere arithmetische Operationen(Wurzel etc.) werden von Bibliotheken übernommen.
+\framebreak
+	\begin{lstlisting}[gobble=4]
+	public class Calc {
+	    public static void main(String[] args) {
+	        int a; // declare variable a
+	        a = 7; // assign 7 to variable a
+	        System.out.println(a); // prints: 7
+	        a = 8;
+	        System.out.println(a); // prints: 8
+	        a = a + 2;
+	        System.out.println(a); // prints: 10
+	    }
+	}\end{lstlisting}
+    Variablen mit primitiven Typen sind nach der ersten Zuweisung initialisiert.	
+\framebreak
+	\begin{lstlisting}[gobble=4]
+	public class Calc {
+	    public static void main(String[] args) {
+	        int a = -9; // declaration and assignment of a
+	        int b; // declaration of b
+	        b = a; // assignment of b
+	        System.out.println(a); // prints: -9
+	        System.out.println(b); // prints: -9
+	        a++; // increments a
+	        System.out.println(a); // prints: -8
+	    }
+	}\end{lstlisting}
+% \framebreak
+% 	\begin{lstlisting}
+% 	public class Calc {
+% 	    public static void main(String[] args) {
+% 	        int b; // declaration of b
+% 	        System.out.println(b);
+% 	    }
+% 	}
+% 	\end{lstlisting}
+% 	Uninitialized variables will cause an Exception. \\
+% 	An Exception is a kind of error we will discuss later.\\
+% 	\vspace{1em}
+% 	\emph{Always assign your variables!}
+% \framebreak
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Berechungen mit \texttt{float}}
+    \begin{lstlisting}[gobble=4]
+    public class Calc {
+        public static void main(String[] args) {
+            float a = 9;
+            float b = 7.5f;
+            System.out.println(a); // prints: 9.0
+            System.out.println(b); // prints: 7.5
+            System.out.println(a + b); // prints: 16.5
+        }
+    }\end{lstlisting}
+\framebreak
+	\begin{lstlisting}[gobble=4]
+	public class Calc {
+	    public static void main(String[] args) {
+	        float a =       8.9f;
+	        float b = 3054062.5f;
+	        System.out.println(a); // prints: 8.9
+	        System.out.println(b); // prints: 3054062.5
+	        System.out.println(a + b); // prints: 3054071.5
+	    }
+	}\end{lstlisting}
+	Gleitkommazahlen sind nicht beliebig genau. \\
+	\emph{Dies kann manchmal zu unerwarteten und/oder falschen Ergebnissen führen!}
+\end{frame}
+
+\begin{frame}[fragile]{Arithmetik mit \texttt{int} und \texttt{float}}
+	\begin{lstlisting}[gobble=4]
+	public class Calc {
+	    public static void main(String[] args) {
+	        float a = 9.3f;
+	        int b = 3;
+	        System.out.println(a + b); // prints: 12.3
+	        float c = a + b;
+	        System.out.println(c); // prints: 12.3
+            int d = a/c; // this shouldn't/doesn't work and should/will throw an Exception
+	    }
+	}\end{lstlisting}
+    Java wandelt \texttt{int} automatisch in \texttt{float} um, falls nötig(\enquote{casting}). \\
+	Umgekehrt aber nicht.
+\end{frame}
+
+\subsection{Text mit Strings}
+
+\begin{frame}[fragile]{Strings}
+    Ein String ist kein primitiver Datentyp, sondern ein Objekt\footnotemark[1]. \\
+	Objekte werden in der nächsten Woche behandelt.
+	\begin{lstlisting}[gobble=4]
+	public class Calc {
+	    public static void main(String[] args) {
+	        String hello = "Hello World!"; // Strings sind immer von doppelten Anführungszeichen umgeben
+	        System.out.println(hello); // print: Hello World!
+	    }
+	}\end{lstlisting}
+    \footnotetext[1]{Deshalb beginnt der Datentyp auch mit einem Großbuchstaben}
+\end{frame}
+
+\begin{frame}[fragile]{Konkatenation}
+	\begin{lstlisting}[gobble=4]
+	public class Calc {
+	    public static void main(String[] args) {
+	        String hello = "Hello";
+	        String world = " World!";
+	        String sentence = hello + world;
+	        System.out.println(sentence);
+	        System.out.println(hello + " World!");
+	    }
+	}\end{lstlisting}
+    Strings können mit \enquote{+} konkateniert(d.h. aneinandergehängt) werden. 
+    Die ausgegebenen Zeilen sind gleich.
+\end{frame}
+
+\begin{frame}[fragile]{Strings und Zahlen}
+	\begin{lstlisting}[gobble=4]
+	public class Calc {
+	    public static void main(String[] args) {
+	    	int factorA = 3;
+	    	int factorB = 7;
+	    	int product = factorA * factorB;
+	    	String answer =
+	            factorA + " * " + factorB + " = " + product;
+	        System.out.println(answer); // prints: 3 * 7 = 21
+	    }
+	}\end{lstlisting}
+    Primitive Datentypen werden bei Konkatenation in ihren momentanen Wert als \texttt{String} umgewandelt\footnotemark[1].
+    \footnotetext[1]{\scriptsize{Genau genommen ruft es die toString() Methode des zugehörigen Objekts auf, dazu nächste Woche mehr}}
+\end{frame}
+
+\begin{frame}[fragile]{Finde den Fehler}
+    \begin{lstlisting}[gobble=8]
+        public class calc {
+            public static void main(string[] args) {
+                int myInt = 5
+                int mySecondInt;
+                float myFloat = 7.4f;
+                float result = myInt + myFloat
+                result = result + mySecondInt;
+                String out = Result = + result;
+                System.out.println(out);
+            };
+        }\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Finde den Fehler}
+    \lstset{moredelim=[is][\textcolor{red}]{|}{|}}
+    \lstset{moredelim=[is][\textcolor{magenta}]{°}{°}}
+    \begin{lstlisting}[gobble=8]
+        public class |c|alc {
+            public static void main(|s|tring[] args) {
+                int myInt = 5°;°
+                int mySecondInt;
+                float myFloat = 7.4f;
+                float result = myInt + myFloat°;°
+                result = result + mySecondInt; //mySecondInt ist nicht initialisiert
+                String out = °"°Result = °"° + result;
+                System.out.println(out);
+            }|;|
+        }\end{lstlisting}
+\end{frame}
+
+\end{document}

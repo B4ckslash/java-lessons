@@ -1,0 +1,383 @@
+\input{../templates/course_definitions}
+\input{../templates/course_information}
+\usepackage{ulem}
+\usepackage{mathtools}
+
+\title{Java}
+\subtitle{Prozedurale Programmierung \& OOP I}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+\begin{frame}{Überblick}
+	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents
+\end{frame}
+
+\section{Nachtrag: Arrays}
+\begin{frame}[fragile]{Arrays}
+    Ein \textit{Array}(oder auch \enquote{Feld}) ist eine Menge fester Größe von gleichartigen Datentypen bzw. Objekten.
+    \begin{lstlisting}[gobble=8]
+        int[] i_arr = {1, 2, 4, 8};
+        char[] c_arr = {'c', 'h', 'a', 'r'};
+        float[] f_arr = new float[5]; //empty array
+        String[] s_arr; //Declaration
+        s_arr = new String[10]; //Initialization
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Arrays}
+    Die Elemente eines \textit{Arrays} sind mit einem Index versehen, über den man auf sie zugreifen kann; \\
+    Java-Arrays sind 0-indexed(sprich: \enquote{zero-indexed}), d.h. das erste Element hat den Index 0.
+    \begin{lstlisting}[gobble=8]
+        System.out.println(i_arr[0]); //prints '1'
+        System.out.println(c_arr[3]); //prints 'r'
+    \end{lstlisting}
+\end{frame}
+
+\section{Prozedurale Programmierung}
+\begin{frame}{Kontrollstatements}
+	
+    \begin{itemize}[<+->]
+        \item Verzweigung \\
+            \onslide<+->{\texttt{if, else, else if}} \\
+            \onslide<+->{\texttt{switch-case}}
+        \item Schleifen \\
+            \onslide<+->{\texttt{while, do-while}} \\
+            \onslide<+->{\texttt{for, for-each}}
+	\end{itemize}
+\end{frame}
+
+\subsection{If-Else}
+\begin{frame}[fragile]{if \& else}
+    \begin{lstlisting}[gobble=8]
+        if(condition) {
+            // do something if condition is true
+        } else if(another condition){
+            // do if "else if" condition is true 
+        } else {
+            // otherwise do this
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{if \& else}
+    \begin{lstlisting}[gobble=8]
+        public class IfElseExample {
+            public static void main(String[] args) {
+                int myNumber = 5;
+                
+                if(myNumber == 3) {
+                    System.out.println("Strange number");
+                } else if(myNumber == 2) {
+                    System.out.println("Unreachable code");
+                } else {
+                    System.out.println("Will be printed");
+                }
+            }
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Bedingungen?}
+    Bedingungen sind Statements, welche einen \texttt{boolean}(Wahrheitswert) darstellen.
+    Logische Verknüpfungen werden folgendermaßen dargestellt:
+    \begin{itemize}[<+->]
+        \item \texttt{!} Negation
+        \item \texttt{==} Gleichheit
+        \item \texttt{!=} Ungleichheit
+        \item \texttt{>} Größer
+        \item \texttt{>=} Größer/Gleich
+        \item \texttt{<} Kleiner
+        \item \texttt{<=} Kleiner/Gleich
+    \end{itemize}
+    \onslide<+->{\textit{Anmerkung}: Mehrere Bedingungen können mit \texttt{\&\&} (logisches UND)\\ oder \texttt{||} (logisches ODER) verkettet werden.
+    Die Reihenfolge ist hierbei in einigen Fällen wichtig!}
+\end{frame}
+
+\subsection{while}
+\begin{frame}[fragile]{while}
+    \begin{lstlisting}[gobble=8]
+        while(condition) {
+            // do code while condition is true
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{while Beispiel}
+    \begin{lstlisting}[gobble=8]
+        public class WhileExample {
+
+            public static void main(String[] args) {
+                int a = 0;
+                while(a <= 10) {
+                    System.out.println(a);
+                    a++; // Otherwise you would get an endless loop
+                }
+            }        
+        }
+    \end{lstlisting}
+\end{frame}
+
+\subsection{for}
+\begin{frame}[fragile]{for}
+    \begin{lstlisting}[gobble=8]
+        for(initial value, condition, change) {
+	        // do code while condition is true
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{for Beispiel}
+    \begin{lstlisting}[gobble=8]
+        public class ForExample {
+
+            public static void main(String[] args) {
+                for(int i = 0; i <= 10; i++) {
+                    System.out.print("na ");
+                }
+                System.out.println("BATMAN!");
+            }        
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{for}
+    Das vorangegangene Programm kann man auch mit einer \texttt{while}-Schleife umsetzen:
+    \begin{lstlisting}[gobble=8]
+        public class ForWhileEx{
+        public static void main(String[] args) {
+            int i = 0;
+            while(i <= 10) {
+                System.out.println("na ");
+                i++;
+                }
+            System.out.println("BATMAN!");
+            }
+        }
+    \end{lstlisting}
+\end{frame}
+
+\subsection{Funktionen}
+\begin{frame}[fragile]{Funktionen}
+    \textit{Funktionen} sind sozusagen mehrmals nutzbare Code-Snippets:
+    \begin{semiverbatim}
+        \alert<2>{public int sq(int n)} \alert<3>{\{
+            return n*n;
+        \}}
+    \end{semiverbatim}
+    \onslide<2->{Funktionen bestehen aus einer \textit{Signatur}}
+    \onslide<3->{und einem \textit{Körper}. \\}
+    \onslide<4->{Im OOP werden Funktionen als \textit{Methoden} bezeichnet.}
+\end{frame}
+
+\begin{frame}[fragile]{Funktionssignaturen}
+    \begin{center} 
+    $
+    {\color{orange}\overbracket[1pt]{\texttt{\large{public static}}}^{\text{access\ modifiers}}\ }
+    {\color{blue}\underbracket[1pt]{\texttt{\large{void}}}_{\text{return\ type}}\ }
+    {\color{black}\overbracket[1pt]{\texttt{\large{main}}}^{\text{name}}\ }
+    {\color{gray}\underbracket[1pt]{\texttt{\large{(String[] args)}}}_{\text{parameter(s)}}}
+    $
+    \end{center}
+    \onslide<+-> Die \texttt{access modifier} regeln, wer die Funktion aufrufen darf. \\
+    \onslide<+-> Der \texttt{return type}(auch: Rückgabewert) gibt an, welchen Typ das \enquote{Ergebnis} hat.\\
+    \onslide<+-> Die \texttt{Parameter}(auch: Argumente) sind die Daten, die die Methode braucht bzw. erwartet.
+\end{frame}
+
+\section{OOP in Java}
+
+\begin{frame}{}
+	\begin{center}
+		{\huge Objektorientierte Programmierung}
+	\end{center}
+\end{frame}
+
+\subsection{Grundlagen}
+
+\begin{frame}[fragile]{Class Student}
+    \begin{lstlisting}[gobble=8]
+        public class Student {
+
+            // Attributes
+            private String name; 
+            private int matriculationNumber; 
+
+            // Methods
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public int getMatriculationNumber() {
+                return matriculationNumber;
+            }
+        }
+    \end{lstlisting}
+
+% What is visible here:
+% Attributes store the state of the object
+% Methods implement the behaviour of the object
+
+\end{frame}
+
+\begin{frame}[fragile]{Ein Objekt erstellen}
+	Ein primitiver Datentyp wird so erstellt:
+    \begin{lstlisting}[gobble=8]
+	    int a; // declare a
+	    a = 273; // assign 273 to a
+	\end{lstlisting}
+    \pause
+	Bei Objekten funktioniert das ähnlich:
+    \begin{lstlisting}[gobble=8]
+	    Student example = new Student(); 
+		// create an instance of Student
+	\end{lstlisting}
+    \pause
+    Ein Objekt einer \textit{Klasse} wird auch \textit{Instanz} genannt.
+	Eine Variable, die mit einem Objekt belegt ist, heißt \textit{Referenz}.
+\end{frame}
+
+\subsection{Methoden}
+\begin{frame}[fragile]{Eine Methode aufrufen}
+	\begin{lstlisting}[gobble=8]
+        public class Student {
+        
+            private String name;
+        
+            public String getName() {
+                return name;
+            }
+            
+            public void setName(String newName) {
+                name = newName;
+            }
+        }
+	\end{lstlisting}
+    Die Klasse \emph{Student} (und damit das Objekt) hat zwei Methoden: \\  \texttt{void printTimetable()} und \texttt{void printName()}.
+\end{frame}
+
+\begin{frame}[fragile]{Eine Methode aufrufen}
+    \begin{lstlisting}[gobble=8]
+        public class Main {
+
+            public static void main(String[] args) {
+                Student example = new Student(); // creation
+                example.setName("Jane"); // method call
+                String name = example.getName(); 
+                System.out.println(name); // Prints "Jane"
+            } 
+        }
+    \end{lstlisting}
+	Man kann eine Methode eines Objekts nach der Instanzierung mittels \texttt{Referenz.methodName();} aufrufen.
+\end{frame}
+
+\begin{frame}[fragile]{Eine Methode aufrufen}
+    \begin{lstlisting}[gobble=8]
+        public class Student {
+        
+            private String name;
+        
+            public void setName(String newName) {
+                name = newName;
+                printName();   // Call own method
+                this.printName(); // Or this way
+            }
+            
+            public void printName() {
+                System.out.println(name);
+            }
+        }
+    \end{lstlisting}
+	Ein Objekt kann seine eigenen Methoden mit \texttt{methodName();} oder \texttt{this.methodName();} aufrufen.
+\end{frame}
+
+\begin{frame}[fragile]{Methoden mit Parametern}
+    \begin{lstlisting}[gobble=8]
+        public class Calc {
+
+            public void add(int summand1, int summand2) {
+                System.out.println(summand1 + summand2);
+            }
+                
+            public static void main(String[] args) {
+                int summandA = 1;
+                int summandB = 2;
+                Calc calculator = new Calc();
+                System.out.print("1 + 2 = ");
+                calculator.add(summandA, summandB); 
+                // prints: 3
+            }    
+        }
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Rückgabewerte}
+\begin{frame}[fragile]{Methoden mit Rückgabewerten}
+	Eine Methode ohne Rückgabewert hat den Typ \texttt{void}:
+	\begin{lstlisting}[gobble=8]
+        public void add(int summand1, int summand2) {
+            System.out.println(summand1 + summand2);
+        }
+	\end{lstlisting}
+    Methoden mit (passenden) Rückgabewerten können Variablen zugewiesen werden:
+    \begin{lstlisting}[gobble=8]
+        int a, b, aTimesB;
+        int a = 5;
+        int b = 7; 
+        int aTimesB = mul(a, b);
+    \end{lstlisting}
+\end{frame}
+
+\subsection{Der Konstruktor}
+\begin{frame}[fragile]{Konstruktoren}
+    Ein \textit{Konstruktor} ist eine spezielle Methode, welche den \enquote{Urzustand} eines Objekts definiert.\\
+    Er wird aufgerufen, sobald ein Objekt instanziert wird:
+    \begin{lstlisting}[gobble=8]
+        public class Calc {
+            private int summand1;
+            private int summand2;
+        
+            public Calc() { // Constructor
+                summand1 = 0;
+                summand2 = 0;
+            }    
+
+            public static void main(String[] args) {
+                Calc calc = new Calc(); //Constructor is called
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Konstruktoren mit Parametern}
+    Ein Konstruktor kann, wie eine \enquote{normale} Methode, auch Parameter übergeben bekommen. \\
+    Das ist nötig, wenn Anfangswerte etc. angegeben werden:
+    \begin{lstlisting}[gobble=8]
+        public class Calc {
+            private int summand1;
+            private int summand2;
+        
+            public Calc(int x, int y) {
+                summand1 = x;
+                summand2 = y;
+            }
+        }
+	\end{lstlisting}
+    \begin{lstlisting}[gobble=8]
+	    [...]
+	    Calc myCalc = new Calc(7, 9);
+	\end{lstlisting} 
+\end{frame}
+
+\begin{frame}{Ausblick}
+    \begin{itemize}
+        \item Datenkapselung
+        \item Vererbung
+        \item Polymorphie
+        \item Das \texttt{this} Keyword
+    \end{itemize}
+\end{frame}
+\end{document}

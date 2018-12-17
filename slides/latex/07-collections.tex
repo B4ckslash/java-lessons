@@ -1,0 +1,342 @@
+\input{../templates/course_definitions}
+\input{../templates/course_information}
+\usepackage{csquotes}
+
+\title{Java}
+\subtitle{Generics \& die Collections-API}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Überblick}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \tableofcontents
+\end{frame}
+
+\section{Generics}
+\subsection{Was sind Generics?}
+\begin{frame}[fragile]{Generics?}
+    \lstset{escapeinside={(*@)}{(@*)}}
+    Was tun, wenn man Datenstrukturen wie Graphen und Listen auf einen bestimmten Typen beschränken will,
+    aber nicht für jede denkbare Kombination aus Typen und Datenstruktur neuen Code schreiben will?
+    \begin{lstlisting}[gobble=8,basicstyle=\ttfamily\scriptsize]
+        public class StringTree {
+            public void add(String item) {}
+            (*@)\dots(@*)
+        }
+        public class IntegerTree {
+            public void add(int item) {}
+             (*@)\dots(@*)
+        }
+        (*@)\dots(@*)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Generics?}
+    \lstset{escapeinside={(*@)}{(@*)}}
+    Eine mögliche Antwort darauf ist Polymorphie.
+    Allerdings hat man dabei das Problem, dass man schnell in komplexes casting rutscht,
+    wenn man mehr als die Methoden des gemeinsamen \enquote{Vorfahren} der zu verwendenden Typen benutzen will:
+    \begin{lstlisting}[gobble=8,basicstyle=\ttfamily\scriptsize]
+        public class Tree {
+            public void add(Object item) {(*@)\dots(@*)}
+            public Object get(int id) {(*@)\dots(@*)}
+        }
+        (*@)\dots(@*)
+        Tree tree = new Tree();
+        tree.add("hello"); //works because any String is also an Object
+        String s = (String)tree.get(0); //must be cast because get(...) returns an Object
+    \end{lstlisting}
+    \pause
+    Hierbei passiert es schnell, dass man inkompatible Typen wie \texttt{String} und \texttt{int} vermischt und ein Fehler beim casting auftritt.
+    Außerdem würde solcher Code ohne Fehler kompilieren, weshalb man nicht immer sofort bemerkt, wenn eine solche Situation auftritt.
+\end{frame}
+
+\begin{frame}[fragile]{Generics!}
+    Um sogenannte \textit{compile-time safety} zu garantieren, hat Java für solche Probleme die \textit{Generics} eingeführt. \\
+    Mit Generics kann \enquote{automatisch} der Typ von Attributen, Parametern und Rückgabewerten angepasst werden:
+    \begin{lstlisting}[gobble=8,basicstyle=\ttfamily\scriptsize]
+        public class Box<T> {
+            // T stands for "Type"
+            private T t;
+
+            public void set(T t) { this.t = t; }
+            public T get() { return t; }
+        }
+
+        Box<Integer> integerBox = new Box<Integer>();
+    \end{lstlisting}
+    Man kann auch mehr als ein Generic pro Klasse verwenden:
+    \begin{lstlisting}[gobble=8,basicstyle=\ttfamily\scriptsize]
+        public class Dictionary<K,V> {
+            //K = Key, V = Value
+            ...
+            public V getByKey(K key) { ... };
+        }
+    \end{lstlisting}
+\end{frame}
+
+\subsection{Wrapper-Klassen}
+\begin{frame}{Wrapper-Klassen}
+    Primitive Datentypen können nicht als Typen von Generics auftreten. \\
+    Um primitive Datentypen trotzdem zu verwenden, muss man die folgenden \textit{Wrapper-Klassen} verwenden:
+    \begin{center}
+        \begin{tabular}{ c  c }
+            boolean & Boolean \\
+            byte & Byte \\
+            char & Character \\
+            int & Integer \\
+            float & Float \\
+            double & Double \\
+            long & Long \\
+            short & Short
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\section{Collections}
+\subsection{Intro}
+\begin{frame}{Die Collections-API}
+    Java hat einige simple Datenstrukuren wie \texttt{Sets}, \texttt{Lists} und \texttt{Maps}.
+    Diese Interfaces gehören zur sogenannten \textit{Collections-API}.
+
+    Das \textit{Package} \texttt{java.util} enthält neben den o.g. Interfaces auch verschiedene Implementierungen davon,
+    wie z.B. \texttt{ArrayList}, \texttt{HashMap} etc.
+    Alternativ kann man auch seine eigenen Implementierungen schreiben und verwenden.
+\end{frame}
+
+\subsection{Set und List}
+\begin{frame}[fragile]{\texttt{java.util.Set}}
+    Ein \texttt{Set} aus dem \texttt{java.util}-Package ist eine Menge von Elementen des gleichen Typs, die kein Element zweimal enthalten kann.
+    \begin{lstlisting}[gobble=8]
+        import java.util.Set;
+        import java.util.HashSet;
+
+        public class SetTest {
+            public static void main(String[] args) {
+                Set<String> set = new HashSet<String>();
+
+                set.add("foo");
+                set.add("bar");
+                set.add("bar"); //throws IllegalMethodException
+                set.remove("foo");
+                System.out.println(set); // prints: [bar]
+            }
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{List}
+    Eine \texttt{java.util.List} ist eine geordnete Menge von Objekten. \\
+    Eine \texttt{LinkedList} ist in Java als eine doubly-linked-list realisiert.
+    \begin{lstlisting}[gobble=8]
+        import java.util.List;
+        import java.util.LinkedList;
+
+        public static void main(String[] args) {
+            List<String> list = new LinkedList<String>();
+
+            list.add("foo");
+            list.add("foo"); // insert "foo" at the end
+            list.add("bar");
+            list.add("foo");
+            list.remove("foo"); // removes the first "foo"
+
+            System.out.println(list); // prints: [foo, bar, foo]
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Listen-Methoden}
+    Einige oft verwendete Methoden von \texttt{List<E>}: \\
+    \smallskip
+    \begin{tabular}{ r l r }
+        void & \scriptsize{\texttt{add(int index, E element)}} & \footnotesize{Element an Indexposition einfügen} \\
+        E &\scriptsize{\texttt{get(int index)}} & \footnotesize{Element an gegebenem Index ausgeben} \\
+        E &\scriptsize{\texttt{set(int index, E element)}} & \footnotesize{Element an Indexposition ersetzen} \\
+        E &\scriptsize{\texttt{remove(int index)}} & \footnotesize{Element an Indexposition entfernen}
+    \end{tabular}
+    \vfill
+    Spezifische Methoden von \texttt{LinkedList<E>}: \\
+    \smallskip
+    \begin{tabular}{ r l r }
+        void & \scriptsize{\texttt{addFirst(E element)}} & \footnotesize{Element am Anfang einfügen} \\
+        E & \scriptsize{\texttt{getFirst()}} & \footnotesize{Erstes Element ausgeben} \\
+        void & \scriptsize{\texttt{addLast(E element)}} & \footnotesize{Element am Ende einfügen} \\
+        E & \scriptsize{\texttt{getLast()}} & \footnotesize{Letztes Element ausgeben}
+    \end{tabular}
+\end{frame}
+
+\subsection{Iterieren}
+\begin{frame}[fragile]{\texttt{for-each}}
+    Java hat eine spezielle Variante der \texttt{for}-Schleife für Collections, die \texttt{for-each}-Schleife: \\
+    \texttt{for (E e : collection)}
+    \begin{lstlisting}[gobble=8]
+        public static void main(String[] args) {
+            List<Integer> list = new LinkedList<Integer>();
+
+            list.add(1);
+            list.add(3);
+            list.add(3);
+            list.add(7);
+
+            for (Integer i : list) {
+                System.out.print(i + " "); // prints: 1 3 3 7
+            }
+        }
+    \end{lstlisting}
+    \enquote{Hinter den Kulissen} verwendet eine solche Schleife einen \texttt{Iterator}.
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{Iterator}}
+    Ein \texttt{Iterator} geht Element für Element über eine Collection:
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        public static void main(String[] args) {
+            List<Integer> list = new LinkedList<Integer>();
+
+            list.add(1);
+            list.add(3);
+            list.add(3);
+            list.add(7);
+
+            Iterator<Integer> iter = list.iterator();
+            while (iter.hasNext()) {
+                System.out.print(iter.next());
+            }
+            // prints: 1337
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{Iterator}}
+    Ein \enquote{normaler} \texttt{Iterator} hat die folgenden Methoden:
+    \begin{itemize}
+        \item \texttt{boolean hasNext()} - Gibt an, ob es noch Elemente nach dem momentanen Element gibt
+        \item \texttt{E next()} - Gibt das nächste Element zurück(\textit{kann nur einmal pro Element aufgerufen werden!})
+        \item \texttt{void remove()} - Entfernt das momentane Element(Wird nicht immer unterstützt)
+    \end{itemize}
+    Ein \texttt{Iterator} wird mittels \texttt{collection.iterator()} erzeugt:
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        Collection<E> collection = new Implementation<E>;
+        Iterator<E> iter = collection.iterator();
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{Iterator}-Workflow}
+    \begin{semiverbatim}
+         Collection: \indent e1\indent e2\indent \dots\indent eN
+        Iter.-Index: \onslide<2>{\textasciicircum} \indent \onslide<3>{\textasciicircum} \indent \onslide<4>{\textasciicircum} \indent\onslide<5>{\textasciicircum} \indent \onslide<6>{\textasciicircum}
+    \end{semiverbatim}
+    \begin{enumerate}[<+->]
+        \item Collection anlegen
+        \item \texttt{Iterator} mittels \texttt{collection.iterator()} erzeugen
+        \item \texttt{Iterator.next()} aufrufen(gibt \texttt{e1} zurück); \texttt{Iterator.hasNext() == true}
+        \item \texttt{Iterator.next()} aufrufen(gibt \texttt{e2} zurück); \texttt{Iterator.hasNext() == true}
+        \item \dots
+        \item \texttt{Iterator.next()} aufrufen(gibt \texttt{eN} zurück); \texttt{Iterator.hasNext() == false}
+    \end{enumerate}
+\end{frame}
+
+\subsection{Map}
+\begin{frame}[fragile]{\texttt{java.util.Map}}
+    Anders als die bisher vorgestellten Interfaces ist \texttt{java.util.Map} kein \enquote{Subinterface} von \texttt{java.util.Collection}. \\
+    In einer \texttt{Map} sind Schlüssel und Werte gespeichert, wobei jeder Schlüssel einzigartig ist und jedem Schlüssel genau ein Wert zugeordnet ist.
+    Werte können jedoch mehrfach vorkommen, weshalb zwei Schlüsseln der gleiche Wert zugeordnet sein kann.
+    \begin{lstlisting}[gobble=8]
+        public static void main (String[] args) {
+            Map<Integer, String> map = new HashMap<Integer, String>();
+
+            map.put(23, "foo");
+            map.put(28, "foo");
+            map.put(31, "bar");
+            map.put(23, "bar"); // "bar" replaces "foo" for key = 23
+
+            System.out.println(map);
+            // prints: {23=bar, 28=foo, 31=bar}
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{keySet()} \& \texttt{values()}}
+    Da die Schlüssel einer \texttt{Map} einzigartig sind, kann man sie mittels \texttt{keySet()} als \texttt{Set} repräsentieren.
+    Das gleiche gilt \emph{nicht} für die zugeordneten Werte: da diese mehrmals auftreten können, werden sie von der \texttt{values()}-Methode als Collection zurückgegeben.
+    \begin{lstlisting}[gobble=8,basicstyle=\ttfamily\scriptsize]
+        public static void main (String[] args) {
+            // [...] map like previous slide
+
+            Set<Integer> keys = map.keySet();
+            Collection<String> values = map.values();
+
+            System.out.println(keys);
+            // prints: [23, 28, 31]
+
+            System.out.println(values);
+            // prints: [bar, foo, bar]
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{Map.keySet().iterator()}}
+    Um mit einem \texttt{Iterator} über eine \texttt{Map} zu iterieren, kann man mit dem \texttt{Iterator} des Schlüssel-Sets arbeiten:
+    \begin{lstlisting}[gobble=8,basicstyle=\ttfamily\scriptsize]
+        public static void main (String[] args) {
+
+            // [...] map, values like previous slide
+            Set<Integer> keys = map.keySet();
+            Iterator<Integer> iter = keys.iterator();
+
+            while(iter.hasNext()) {
+                System.out.print(map.get(iter.next()) + " ");
+            } // prints: bar foo bar
+
+            System.out.println(); // print a line break
+
+            for(Integer i: keys) {
+                System.out.print(map.get(i) + " ");
+            } // prints: bar foo bar
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{Map} und \texttt{for-each}}
+    Man kann auch mit einem \texttt{for-each} direkt über dem Keyset iterieren und dadurch über die \texttt{Map} iterieren:
+    \begin{lstlisting}[gobble=8]
+          Map<String, String> map = ...
+          for (Map.Entry<String, String> entry : map.entrySet()) {
+            System.out.println("Key: " + entry.getKey() +
+            ", value" + entry.getValue());
+          }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Zusammenfassung}
+    \begin{center}
+        \begin{tabular}{ l | l }
+            List & Speichert die Reihenfolge der Elemente \\
+                 & Einfach zu iterieren \\
+                 & ineffektive Suche\\
+            \hline
+            Set  & Keine Duplikate \\
+                 & Keine bestimmte Reihenfolge \\
+                 & Effektives Suchen \\
+            \hline
+            Map  & Key-Value-Paare \\
+                 & Hocheffektive Suche \\
+                 & Iteration komplizierter
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Übung}
+    \center
+    \large{Wähle Dir eine der folgenden Übungen aus: \\
+    \vfill
+    1. (Generics) Baue die \texttt{NumberBox} aus dem Kurs-Repo(unter sourcefiles/07-collections/exercise) so um, dass sie Generics verwendet. \\
+    \vfill
+    2. (Collections) Schreibe ein Programm, in dem du eine Implementierung von \texttt{java.util.List} mit Elementen befüllst und diese mittels eines \texttt{Iterators} ausgibst. Welche Methoden werden von diesem \texttt{Iterator} verwendet?}
+\end{frame}
+\end{document}

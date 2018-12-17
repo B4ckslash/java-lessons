@@ -1,0 +1,133 @@
+\input{../templates/course_definitions}
+\input{../templates/course_information}
+\usepackage{csquotes}
+\usepackage{mathtools}
+
+\title{Java}
+\subtitle{Wiederholung}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Überblick}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \tableofcontents
+\end{frame}
+
+\section{Wiederholung: Datentypen}
+\begin{frame}{Quiz zu Datentypen}
+    Welcher Datentyp ist ideal für die folgenden Werte? 
+    \begin{center}
+        \begin{tabular}{l l}
+            \texttt{1337} & \pause \texttt{int} oder \texttt{short}\\
+            \texttt{c} & \pause \texttt{char} \\
+            \texttt{4.2} & \pause \texttt{float} oder \texttt{double} \\
+            \texttt{12.345.678.910} & \pause \texttt{long} \\
+            \texttt{Peter} & \pause \texttt{String}
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\section{Wiederholung: OOP}
+\begin{frame}{Wiederholung: OOP}
+    \center{\huge{Was macht ein Objekt aus?} \\
+            \smallskip \huge{Wie passen Klassen dazu?}}
+\end{frame}
+
+\begin{frame}{Wiederholung:OOP}
+    Ein \textit{Objekt} besteht aus den folgenden Teilen:
+    \begin{itemize}[<+->]
+        \item \textit{Attribute}, welche den momentanen Zustand und die Eigenschaften des Objekts darstellen. 
+            \begin{itemize}
+                \item Attribute sollten nicht für die Außenwelt direkt zugänglich sein \\ (-> Verkapselung). 
+                \item Attribute können sowohl primitive Datentypen als auch andere Objekte sein.
+            \end{itemize}
+        \item \textit{Methoden}, die das sogenannte Verhalten des Objekts darstellen.
+            \begin{itemize}
+                \item Methoden regeln, was \& wie ein Objekt agiert.
+                \item Die \textit{Signatur} einer Methode sieht folgendermaßen aus: \\
+            \end{itemize}
+            \onslide<+->{$
+                        {\color{orange}\overbracket[1pt]{\texttt{\large{public static}}}^{\text{access\ modifiers}}\ }
+                        {\color{blue}\underbracket[1pt]{\texttt{\large{void}}}_{\text{return\ type}}\ }
+                        {\color{black}\overbracket[1pt]{\texttt{\large{main}}}^{\text{name}}\ }
+                        {\color{gray}\underbracket[1pt]{\texttt{\large{(String[] args)}}}_{\text{parameter(s)}}}
+                        $}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Wiederholung:OOP}
+    Eine \textit{Klasse} dagegen ist sozusagen der Bauplan für ein Objekt.
+    \begin{itemize}[<+->]
+        \item Sie definiert, welche Attribute ein Objekt haben kann und welchen Typ sie haben.
+        \item Ebenso definiert sie die Methoden, die ein Objekt verwenden kann, kann sie aber nicht \enquote{selbst} aufrufen.
+        \item Außerdem definiert sie den \textit{Konstruktor}, eine spezielle Methode, die festlegt, 
+            wie ein Objekt erzeugt wird und welche Anfangswerte es benötigt.
+        \item Eine Klasse kann auch eigene Methoden und Variablen haben; diese sind mit dem Keyword \texttt{static} markiert.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{OOP-Übung}
+    -> Code
+\end{frame}
+
+\section{Wiederholung:Vererbung}
+\begin{frame}{Wiederholung:Vererbung}
+    \center{\huge{Was ist Vererbung? \\
+            \smallskip Wozu braucht man Vererbung?}}
+\end{frame}
+
+\begin{frame}{Wiederholung:Vererbung}
+    Vererbung wird verwendet, um gemeinsame Attribute und Methoden von mehreren Klassen in eine gemeinsame \textit{Superklasse} auszulagern. \\
+    Dies hat die folgenden Auswirkungen:
+    \begin{itemize}[<+->]
+        \item Jede Instanz(d.h. ein Objekt) einer erbenden Klasse ist automatisch auch eine Instanz ihrer Superklasse.
+        \item Attribute und Methoden, die in der Superklasse als \texttt{protected} oder \texttt{public} markiert sind, 
+            sind auch in jeder erbenden Klasse (\enquote{Subklasse}) verfügbar.
+        \item Wenn in der Superklasse ein Konstruktor definiert ist, \textit{muss} dieser im Konstruktor 
+            der Subklasse mittels \texttt{super(\dots);} aufgerufen werden.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Übung:Vererbung}
+    -> Code
+\end{frame}
+
+\section{Wiederholung:Interfaces}
+\begin{frame}{Wiederholung:Interfaces}
+    \center{\huge{Wofür braucht man Interfaces? \smallskip \\ Was macht ein Interface aus?}}
+\end{frame}
+
+\begin{frame}{Wiederholung:Interfaces}
+    Ein \textit{Interface} ist sozusagen eine Vereinbarung, dass alle Objekte, die ein Interface implementieren, 
+    mindestens die im Interface vorgegebenen Methoden umsetzt. Ein Interface ist durch die folgenden Eigenschaften gekennzeichnet:
+    \begin{itemize}[<+->]
+        \item Es definiert Methoden\textbf{signaturen}, die von den implementierenden Klassen \enquote{mit Funktionalität versehen werden müssen}.
+        \item Es definiert Konstanten(d.h. Variablen mit dem Keyword \texttt{final}), die von allen Objekten der implementierenden Klassen geteilt werden.
+        \item (Seit Java 8) Es \emph{kann} Methoden eine \enquote{Fallback}-Definition geben, falls eine Klasse sie nicht selbst definiert(mittels \texttt{default}).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Wiederholung:Polymorphie}
+    Es ist auch möglich, einer Referenz einer \enquote{übergeordneten} Klasse bzw. Interface mit einer \enquote{untergeordneten} Klasse zu belegen: 
+    \begin{lstlisting}[gobble=8]
+        public class Student extends Person {...}
+        public class Video implements Streamable {...}
+        [...]
+        Person student = new Student(...);
+        Streamable stream = new Video(...);
+    \end{lstlisting}
+    \textit{Hinweis:} Mit Polymorphie beschränkt man die \enquote{Fähigkeiten} des Objekts auf diejenigen, 
+    die in der \enquote{übergeordneten} Klasse bzw. Interface definiert sind 
+    und kann nicht mehr auf eventuelle zusätzlich definierte Methoden in den Unterklassen zugreifen.
+\end{frame}
+
+\begin{frame}{Übung:Interfaces \& Polymorphie}
+    -> Code
+\end{frame}
+
+\end{document}

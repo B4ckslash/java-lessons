@@ -1,0 +1,293 @@
+\input{../templates/course_definitions}
+\input{../templates/course_information}
+\usepackage{csquotes}
+\usepackage{qtree}
+
+\title{Java}
+\subtitle{\texttt{abstract} \& Exceptions}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Überblick}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \tableofcontents
+\end{frame}
+
+\section{\texttt{abstract}}
+\subsection{Intro}
+\begin{frame}[fragile]{Abstrakte Klassen}
+    \textit{Abstrakte Klassen} repräsentieren eine \enquote{Mischung} aus Interfaces und Vererbung,
+    da sie sowohl Methoden \& Konstruktoren als auch \enquote{Vorschriften}(Methodensignaturen) enthalten kann. \\
+    Abstrakte Klassen sind durch das Keyword \texttt{abstract} gekennzeichnet.
+    \begin{lstlisting}[gobble=8]
+        public abstract class AbstractExample {
+
+        }
+    \end{lstlisting}
+    \pause
+    \begin{itemize}[<+->]
+        \item Abstrakte Klassen sind gut geeignet um ein \enquote{Interface} mit vielen \texttt{default}-Methoden zu realisieren.
+        \item Von einer abstrakten Klasse können keine Objekte erzeugt werden.
+        \item Abstrakte Klasse können von anderen abstrakten Klassen erben und können interfaces implementieren.
+        \item Normale und abstrakte Klassen können von abstrakten Klassen erben.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Methoden}
+    Eine abstrakte Klasse kann sowohl \enquote{normale} Methoden als auch \textit{abstrakte} Methoden haben:
+    \begin{lstlisting}[gobble=8]
+        public abstract class AbstractExample {
+            public void printHello() {
+                System.out.println("Hello");
+            }
+
+            public abstract String getName();
+        }
+    \end{lstlisting}
+    Abstrakte Methoden bestehen(wie bei Interfaces) nur aus der Methodensignatur(und dem Keyword \texttt{abstract}).
+    Sobald man eine abstrakte Methode deklariert, muss die enthaltende Klasse ebenfalls als abstrakt markiert werden.
+\end{frame}
+
+\begin{frame}[fragile]{Vererbung}
+    Jede erbende Klasse einer abstrakten Klasse muss entweder alle abstrakten Methoden implementieren oder selbst abstrakt sein.
+    Alle \enquote{normalen} Methoden werden wie gewohnt übernommen.
+    \begin{lstlisting}[gobble=8]
+        public class Example extends AbstractExample {
+            @Override
+            public String getName() {
+                return "Example";
+            }
+        }
+    \end{lstlisting}
+\end{frame}
+
+\section{Exceptions}
+\subsection{Überblick}
+\begin{frame}{Exceptions}
+    Idealerweise würden bei der Ausführung eines Programms nie Fehler oder generell unerwartetes Verhalten auftreten.
+    Da die Welt allerdings nicht ideal ist, muss man sich als Programmierer (leider) mit solchen Situationen auseinandersetzen.
+
+    Java unterstützt Fehlerbehandlung nativ, mit sogenannten \textit{Exceptions}.
+    Exceptions separieren Fehlersituationen und -behandlung von \enquote{normalem} Code.
+\end{frame}
+
+\begin{frame}{Hierarchie}
+    \center{\Tree [.Object [.Throwable Error [.Exception \dots{} RuntimeException ] ] ]} \\
+    \smallskip
+    Jede Exception ist eine Subklasse von \texttt{Throwable}.
+    \texttt{Error} ist ebenfalls eine Subklasse von \texttt{Throwable}, ist aber für schwerwiegende Fehler innerhalb der JVM bzw. des JRE reserviert.
+    Da jede Exception auch \enquote{throwable} ist, sagt man auch, dass Exceptions \textit{geworfen} werden.
+
+    \scriptsize\url{https://docs.oracle.com/javase/10/docs/api/java/lang/Throwable.html}
+\end{frame}
+
+\begin{frame}{(Un-)Checked Exceptions}
+    Alle Exceptions außer \texttt{RuntimeException} und ihrer Subklassen sind sogenannte \textit{checked Exceptions}.
+    \pause
+    \begin{itemize}[<+->]
+        \item Checked exceptions müssen entweder sofort behandelt oder weitergegeben werden(dazu später mehr)
+        \item Die Ursache solcher Exceptions liegt meistens außerhalb des Programms(z.B. Dateien oder Datenbanken)
+    \end{itemize}
+    \onslide<+->{\texttt{RuntimeException} und ihre Subklassen dagegen sind sogenannte \textit{unchecked Exceptions}.}
+    \begin{itemize}[<+->]
+        \item Unchecked Exceptions müssen nicht zwingend behandelt oder weitergegeben werden.
+        \item Solche Exceptions treten meistens aufgrund eines Fehlers im Programmcode auf, wie z.B. eine NullPointerException.
+        \item Prinzipiell kann jede Methode eine solche Exception erzeugen.
+    \end{itemize}
+\end{frame}
+
+\subsection{Exceptions behandeln}
+\begin{frame}[fragile]{Intro}
+    \begin{lstlisting}[gobble=8]
+        public class Calc {
+
+            public static void main(String[] args) {
+
+                int a = 7 / 0;
+                // will cause an ArithmeticException
+
+                System.out.println(a);
+            }
+        }
+    \end{lstlisting}
+    Division durch 0 wirft eine \texttt{ArithmeticException}, was eine Subklasse von \texttt{RuntimeException} ist.
+    Deshalb ist \texttt{ArithmeticException} eine unchecked Exception und muss nicht zwingend behandelt werden.
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{try} und \texttt{catch}}
+    Sobald eine Exception auftritt, stürzt das Programm ab, sofern sie nicht behandelt wird.
+    Auch wenn eine Exception nicht behandelt werden muss, kann man sie trotzdem mittels eines \texttt{try-catch}-Blocks behandeln:
+    \begin{lstlisting}[gobble=8]
+        public class Calc {
+            public static void main(String[] args) {
+
+                try {
+                    int a = 7 / 0;
+                } catch (ArithmeticException e) {
+                    System.out.println("Division by zero.");
+                }
+            }
+        }
+    \end{lstlisting}
+    Der \texttt{catch}-Block, auch \textit{Exception handler} genannt,
+    wird aufgerufen, wenn die angegebene Exception im \texttt{try}-Block auftritt.\\
+    Man kann innerhalb eines \texttt{catch}-Blocks auch mehrere Exceptions abfangen.
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{try} und \texttt{catch}}
+    Man kann (sollte aber nicht!) jede mögliche Exception mit einem \texttt{try-catch} abfangen:
+    \begin{lstlisting}[gobble=8]
+        try{
+            ...
+        } catch (Exception e) { ... }
+    \end{lstlisting}
+    Auch wenn es erlaubt ist, geht bei solchen Konstrukten sehr schnell verloren, was der genaue Fehler war.
+\end{frame}
+
+\begin{frame}[fragile]{Stacktraces}
+    \begin{lstlisting}[gobble=8]
+        public class Calc {
+            public static void main(String[] args) {
+
+                try {
+                    int a = 7 / 0;
+                } catch (ArithmeticException e) {
+                    System.out.println("Division by zero.");
+                    e.printStackTrace();
+                }
+            }
+        }
+    \end{lstlisting}
+    Ein \textit{Stacktrace} gibt alle Methodenaufrufe(d.h. den \textit{call-stack}) wieder, die zum Zeitpunkt der Exception aktiv waren.
+\end{frame}
+
+\begin{frame}[fragile]{Stack Trace}
+    \begin{lstlisting}[gobble=8]
+        Division by zero.
+        java.lang.ArithmeticException: / by zero
+            at Calc.main(Calc.java:6)
+            at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+            at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+            at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+            at java.lang.reflect.Method.invoke(Method.java:498)
+            at com.intellij.rt.execution.application.AppMain.main(AppMain.java:147)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{try-catch-finally}}
+    Bei einigen Ressourcen(z.B. Dateien) ist es wichtig, dass bestimmte beendende Methoden auch dann aufgerufen werden, wenn etwas schiefgeht.
+    Hierzu gibt es den \texttt{finally}-Block:
+    \begin{lstlisting}[gobble=8]
+        public class Calc {
+            public static void main(String[] args) {
+                try {
+                    int a = 7 / 0;
+                } catch (ArithmeticException e) {
+                    System.out.println("Division by zero.");
+                    e.printStackTrace();
+                } finally {
+                    System.out.println("End of program.");
+                }
+            }
+        }
+    \end{lstlisting}
+    Ein \texttt{finally}-Block wird immer ausgeführt, egal ob tatsächlich eine Exception auftritt oder nicht.
+\end{frame}
+
+\subsection{Exceptions werfen}
+\begin{frame}[fragile]{Exceptions weitergeben}
+    Unhandled exceptions können auch wieder geworfen(weitergegeben) werden.
+    Dies wird mithilfe des Keywords \texttt{throws} am Ende der Methodensignatur getan:
+    \begin{lstlisting}[gobble=8]
+        public static int divide (int dividend, int divisor) throws ArithmeticException {
+            return dividend / divisor;
+        }
+    \end{lstlisting}
+    Durch das Keyword \texttt{throws} wird jede Exception, die den passenden Typ hat und
+    innerhalb der Methode \texttt{\textcolor{blue}{int} divide(\dots)} auftritt an die aufrufende Methode weitergegeben.
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions weitergeben - Test}
+    \begin{lstlisting}[gobble=8]
+        public class Calc {
+            public static int divide (int dividend, int divisor) throws ArithmeticException {
+                return dividend / divisor;
+            }
+
+            public static void main(String[] args) {
+
+                int a = 0;
+                try {
+                    a = Calc.divide(7, 0);
+                } catch (ArithmeticException e) {
+                    System.out.println("Division by zero.");
+                    e.printStackTrace();
+                }
+            }
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions weitergeben - Test}
+    \begin{lstlisting}[gobble=8]
+        public static void main(String[] args) {
+            int a = 0;
+            try {
+                a = Calc.divide(7, 0);
+            } catch (ArithmeticException e) {
+                System.out.println("Division by zero.");
+                e.printStackTrace();
+            }
+        }
+    \end{lstlisting}
+    In diesem Beispiel ist eine neue Methode(die aufrufende Methode) zum Stacktrace dazu gekommen:
+    \texttt{java.lang.ArithmeticException: / by zero}\\
+    \texttt{at Calc.divide(Calc.java:4)}\\
+    \texttt{at Calc.main(Calc.java:11)}
+\end{frame}
+
+\begin{frame}[fragile]{Eigene Exceptions}
+    Wie auch sonst alles in Java, kann man auch seine eigenen Exceptions erstellen und nutzen:
+    \begin{lstlisting}[gobble=8]
+        public class DivisionByZeroException extends Exception {
+        }
+    \end{lstlisting}
+    \vfill
+    \begin{lstlisting}[gobble=8]
+        public static int divide (int dividend, int divisor) throws DivisionByZeroException {
+            if (divisor == 0) {
+                throw new DivisionByZeroException();
+            }
+            return divident / divisor;
+        }
+    \end{lstlisting}
+    Exceptions können \enquote{von Hand} mit dem Keyword \texttt{throw} geworfen werden.
+\end{frame}
+
+\begin{frame}[fragile]{Eigene Exceptions - Test}
+    \begin{lstlisting}[gobble=8]
+        public static void main(String[] args) {
+            int a = 0;
+            try {
+                a = Calc.divide(7, 0);
+            } catch (DivisionByZeroException e) {
+                System.out.println("Division by zero.");
+                e.printStackTrace();
+            }
+        }
+    \end{lstlisting}
+    Da \texttt{DivisionByZeroException} direkt von \texttt{Exception} erbt, ist sie eine checked Exception.
+\end{frame}
+
+\begin{frame}{Übungsaufgabe}
+    \center
+    \large{Such dir eine oder zwei Exceptions aus der Java Reference und schreibe Code, in dem sie auftritt. \\
+    Füge dann den Code hinzu, der diese Exception a) behandelt und den Stacktrace ausgibt und b) sie an die aufrufende Methode weitergibt.}
+\end{frame}
+
+\end{document}

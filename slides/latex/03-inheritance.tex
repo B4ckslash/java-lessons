@@ -1,0 +1,310 @@
+\input{../templates/course_definitions}
+\input{../templates/course_information}
+\usepackage{csquotes}
+\usepackage{ulem}
+
+
+\title{Java}
+\subtitle{Vererbung}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Overview}
+	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents
+\end{frame}
+
+\section{Datenkapselung}
+\begin{frame}[fragile]{Zugriffsrechte}
+    Um zu regeln, welche Objekte bzw. Klassen in Java worauf zugreifen dürfen, gibt es die folgenden Keywords:
+    \begin{itemize}[<+->]
+		\item \texttt{public}
+		\item \texttt{private}
+		\item \texttt{protected}
+	\end{itemize}
+\end{frame}
+	
+\begin{frame}[fragile]{Zugriffsrechte}
+	\begin{lstlisting}[gobble=8]
+		public class Student {
+			public String getName() {
+				return "Peter";
+			}
+			
+			private String getFavouritePorn() {
+				return "...";
+			}
+		}
+	
+		// [...]
+		exampleStudent.getName(); // Works!
+		exampleStudent.getFavouritePorn(); // Error
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Datenkapselung}
+    \textit{Datenkapselung} bezeichnet das \enquote{Verstecken} der Attribute von Objekten. \\
+    \begin{lstlisting}[gobble=8]
+        public class Student{
+            private String name;
+            public int matNr;
+
+            [...]
+            public void setName(String name) {
+                if(name.isEmpty() || name == null) return;
+                this.name = name;
+            }
+        }
+        [...]
+            Student s = new Student("Max", 4567283);
+            s.name = ""; // throws exception
+            s.setName(""); //doesn't change name
+            s.matNr = -1; // works, but makes no sense
+            s.setName("Peter"); //works
+        [...]
+    \end{lstlisting}
+\end{frame}
+
+\section{Mehr über Arrays}
+\subsection{Mehrdimensionale Arrays}
+\begin{frame}[fragile]{2-Dimensional Array}
+	Arrays können mehrdimensional sein. \\
+    Ein n-dimensionales Array hat dementsprechend auch n Indizes.
+    \begin{lstlisting}[gobble=8]
+        public static void main(String[] args) {
+
+            // an array with 100 elements
+            int[][] intArray = new int[10][10];
+            
+            intArray[0][0] = 0;
+            intArray[0][9] = 9;
+            intArray[9][9] = 99;
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Arrays von Objekten}
+    Es ist natürlich auch möglich, ein Array von Objekten anzulegen:
+    \begin{lstlisting}[gobble=8]
+        public static void main(String[] args) {
+
+            Student[][] studentArray = new Student[10][10];
+            
+            for(int i = 0; i < 10; i++) {
+                for(int j = 0; j < 10; j++) {
+                    studentArray[i][j] = new Student();
+                }
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\section{Vererbung}
+\subsection{Vererbung}
+\begin{frame}[fragile]{Eine Lieferung}
+    Die folgende Klasse \texttt{Letter} ist eine Unterklasse von \texttt{Delivery}, erkennbar am Keyword \texttt{extends}.
+	\begin{itemize}
+        \item \texttt{Letter} ist eine \textit{Unterklasse} bzw \textit{Subklasse} der Klasse \texttt{Delivery}
+		\item \texttt{Delivery} ist die \textit{Superklasse} von \texttt{Letter}
+	\end{itemize}
+    \begin{lstlisting}[gobble=8]
+        public class Letter extends Delivery {
+        
+        }
+	\end{lstlisting}
+	\vfill
+    \pause
+	Eine Klasse kann mehrere Subklassen haben. \\
+    Umgekehrt kann eine Klasse maximal eine Superklasse haben. \\
+    Eine Subklasse \textit{erbt} von ihrer Superklasse.
+\end{frame}
+
+\begin{frame}[fragile]{Beispiel}
+    Für heute haben wir die Klassen \texttt{PostOffice}, \texttt{Delivery} and \texttt{Letter}.
+    Im Verlauf des Kurses werden sie immer weiter wachsen.
+	\begin{lstlisting}
+        public class Delivery {
+            private String address;
+            private String sender;
+            
+            public void setAddress(String addr) {
+                address = addr;
+            }
+            
+            public void setSender(String snd) {
+                sender = snd;
+            }
+            
+            public void printAddress() {
+                System.out.println(this.address);
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Methodenvererbung}
+	Mithilfe von Vererbung kann man auf einer Instanz von \texttt{Letter} die Methoden von \texttt{Delivery} aufrufen:
+    \begin{lstlisting}[gobble=8]
+        public class PostOffice {
+        
+            public static void main(String[] args) {
+            
+                Letter letter = new Letter();
+                
+                letter.setAddress("cafe ascii, Dresden");
+                
+                letter.printAddress();
+                // prints: cafe ascii, Dresden
+            }	
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Methoden-Override}
+    Im folgenden Code-Snippet wird die Methode printAdress() in der Klasse \texttt{Letter} neu definiert:
+    \begin{lstlisting}[gobble=8]
+        public class Letter extends Delivery {
+            @Override
+            public void printAddress() {
+                System.out.println("a letter for " + this.address);    
+            }	
+        }
+	\end{lstlisting}
+    \pause
+    \texttt{@Override} ist eine \textit{Annotation}.
+    Annotationen sind nicht zwingend notwendig, machen den Code allerdings leichter verständlich.
+    Wofür Annotationen sonst noch gebraucht werden, besprechen wir in kommenden Kursen.
+\end{frame}
+\begin{frame}[fragile]{Methoden-Override}
+	Durch den Override wird jetzt die \texttt{printAddress()}-Methode aus der Klasse \texttt{Letter} verwendet.
+    \begin{lstlisting}[gobble=8]
+        public class PostOffice {
+            public static void main(String[] args) {
+                Letter letter = new Letter();
+                
+                letter.setAddress("cafe ascii, Dresden");
+                
+                letter.printAddress();
+                // prints: a letter for cafe ascii, Dresden
+            }	
+        }
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Konstruktor}
+\begin{frame}[fragile]{Super()}
+	Falls in der Superklasse(hier \texttt{Delivery}) einen \textbf{Konstruktor mit Parametern} definieren, \\
+    müssen wir das auch in jeder Unterklasse tun.
+    \begin{lstlisting}[gobble=8]
+        public class Delivery {
+            private String address;
+            private String sender;
+            
+            public Delivery(String address, String sender) {
+                this.address = address;
+                this.sender = sender;
+            }
+                    
+            public void printAddress() {
+                System.out.println(address);
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{super()}}
+	Innerhalb des Konstruktors von \texttt{Letter} können wir mittels des Aufrufs \texttt{super()} den Konstruktor der Superklasse aufrufen. 
+	\begin{lstlisting}[gobble=8]
+        public class Letter extends Delivery {
+            public Letter(String address, String sender) {
+                super(address, sender);
+            }
+        
+            @Override
+            public void printAddress() {
+                System.out.println("a letter for " + this.address);    
+            }	
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Super() - Test}
+    \begin{lstlisting}[gobble=8]
+        public class PostOffice {
+            public static void main(String[] args) {	    
+                Letter letter = new Letter("cafe ascii, Dresden", "");
+                
+                letter.printAddress();
+                // prints: a letter for cafe ascii, Dresden
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Implizite Vererbung}
+\begin{frame}{java.lang.Object}
+	Jede Klasse in Java erbt automatisch von \texttt{java.lang.Object}. 
+	Deshalb erbt jede Klasse die Methoden von \texttt{Object}.
+	\vfill
+    Alle Methoden von \texttt{Object} sind unter \scriptsize\url{http://docs.oracle.com/javase/10/docs/api/java/lang/Object.html} \normalsize \\ zu
+	finden.
+\end{frame}
+
+\begin{frame}[fragile]{toString()}
+	\texttt{Letter}ist eine Unterklasse von \texttt{Object}.
+	Deshalb erbt \texttt{Letter} die Methode \texttt{toString()} von \texttt{Object}.\\
+	\texttt{System.out.println(argument)} ruft \texttt{argument.toString()} auf, um einen String zu erhalten, der ausgegeben werden kann.
+    \begin{lstlisting}[gobble=8]
+        public class PostOffice {
+            public static void main(string[] args) {	    
+                letter letter = 
+                    new letter("cafe ascii, dresden", "");
+                
+                system.out.println(letter);
+                // prints: letter@_some_hex-value_
+                // for example: letter@4536ad4d
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{toString()-Override}
+    \begin{lstlisting}[gobble=8]
+        public class Letter extends Delivery {
+            public letter(string address, string sender) {
+                super(address, sender);
+            }
+        
+            @Override
+            public string tostring() {
+                return "a letter for " + this.address;
+            }	
+        }
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{toString()-Override - Test}
+    \begin{lstlisting}[gobble=8]
+        public class PostOffice {
+            public static void main(String[] args) {	    
+                Letter letter = 
+                    new Letter("cafe ascii, Dresden", "");
+                
+                System.out.println(letter);
+                // a letter for cafe ascii, Dresden
+            }
+        }
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Praktisches Beispiel}
+\begin{frame}{Beispiel}
+        \center{-> IntelliJ}
+\end{frame}
+
+\end{document}

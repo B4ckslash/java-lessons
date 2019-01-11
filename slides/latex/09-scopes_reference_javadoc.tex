@@ -68,11 +68,11 @@
     Die Reference ist hierarchisch gegliedert: \\
     \smallskip \small
     \begin{tikzpicture}
-        \Tree   [.Reference 
-                    [.\node (level0) {\texttt{java.base}}; 
-                        [.\node (level1) {\texttt{java.util}}; 
+        \Tree   [.Reference
+                    [.\node (level0) {\texttt{java.base}};
+                        [.\node (level1) {\texttt{java.util}};
                             \node (level2) {\texttt{ArrayList}}; {\texttt{HashSet}} {\dots}
-                        ] 
+                        ]
                         [.{\texttt{java.lang}}
                             {\texttt{Object}} {\texttt{Math}} {\dots}
                         ]
@@ -81,27 +81,122 @@
                     {\dots}
                 ]
             \foreach \Value/\Text in {0/{Module},1/{Package},2/{Klasse}}
-            {  
-              \node[anchor=west] 
-                at ([xshift=-2.5cm,yshift=0.05cm]{level2}|-{level\Value}) 
+            {
+              \node[anchor=west]
+                at ([xshift=-2.5cm,yshift=0.05cm]{level2}|-{level\Value})
                 {\Text};
             }
     \end{tikzpicture}
 \end{frame}
 
+\subsection{Mit der Reference arbeiten}
 \begin{frame}{Struktur einer Reference-Seite}
     Die Seite einer einzelnen Klasse(oder eines Interfaces) in der Reference ist folgendermaßen strukturiert:
     \begin{enumerate}[<+->]
-        \item Eine kurze Zusammenfassung der Klasse, bestehend aus: 
-            \begin{itemize}
-                \item Der \enquote{Vererbungshierarchie} der Klasse
-                \item Gegebenenfalls generische Typvariablen der Klasse
-                \item Alle implementierten Interfaces \& alle bekannten erbenden Klassen
-                \item Alle Super- und Subinterfaces(nur für Interfaces)
-                \item Alle bekannten implementierenden Klassen(nur für Interfaces)
-                \item 
-            \end{itemize}
+        \item Ein \enquote{Stammbaum}, d.h. wovon geerbt wird, wer erbt, was implementiert wird etc.
+        \item Eine Beschreibung, wozu die Klasse/das Interface dient
+        \item Ein Überblick über Attribute, Konstruktoren und Methoden, die \texttt{public} sind
+        \item Detaillierte Beschreibungen von Konstruktoren und Methoden
     \end{enumerate}
 \end{frame}
 
+\begin{frame}{Die Java-Reference}
+    Meistens ist das gesuchte in den detaillierten Methodenbeschreibungen zu finden. Darin stehen u.a.:
+    \begin{itemize}[<+->]
+        \item Die Parameter, die die Methode braucht
+        \item Was eine Methode zurück gibt
+        \item Welche Exceptions eine Methode generieren kann
+    \end{itemize}
+    \medskip
+    \onslide<+->
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Viele IDEs haben Möglichkeiten, die detaillierte Beschreibung einer Methode direkt anzuzeigen:\\
+            IntelliJ: \texttt{Ctrl+Q} \\
+            Eclipse: \texttt{F2} \\
+            \smallskip
+            Dabei muss der Cursor über dem Element sein, nachdem gesucht werden soll.
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{../images/IntelliJ_Reference_Popup.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Die Java-Reference}
+    \center
+    \huge
+    Wäre doch auch praktisch, das für seinen eigenen Code zu haben, oder?
+\end{frame}
+
+\section{JavaDoc}
+\subsection{Was ist JavaDoc?}
+\begin{frame}[fragile]{Was ist JavaDoc?}
+    JavaDoc(\textbf{Java Doc}umentation) ist ein Tool aus dem JDK, welches automatisch bestimmte Kommentare über
+    Methoden, Konstruktoren und Attributen in das gleiche Format wie die Java-Reference umwandelt.\\
+    \onslide<2->
+    JavaDoc-Kommentare sind spezielle mehrzeilige Kommentare(\texttt{/* Kommentar */}), wobei der Anfang zwei Sterne (\texttt{/**}) am Anfang hat:
+    \begin{lstlisting}[gobble=8]
+        /**
+         * Calculates the sum of two {@code ints}.
+         *
+         * @param a The first number of the equation.
+         * @param b The second number of the equation.
+         * @return A {@code long} that represents the sum of the two numbers.
+         */
+        public long sumOfInts(int a, int b) { ... }
+    \end{lstlisting}
+\end{frame}
+
+\subsection{JavaDoc schreiben}
+\begin{frame}{JavaDoc-Tags}
+    JavaDoc hat ein paar spezielle Annotationen, die sogenannten \textit{Tags}. Diese dienen der Formatierung und beginnen immer mit \texttt{@}.\\
+    \onslide<2->
+    Einige oft verwendete Tags:\\
+    \bigskip
+    \begin{tabular}{l | l}
+        \texttt{@author} & Gibt den Autor an \\
+        \texttt{@param} \textit{<name>} & Beschreibung v. Param. \textit{<name>} (nur Methoden)\\
+        \texttt{@return} & Beschreibung des Rückgabewertes (nur Methoden) \\
+        \texttt{@throws} \textit{<exception>} & Wann \textit{<exception>} auftritt (nur Methoden)\\
+        \texttt{\{@code} \textit{<text>}\texttt{\}} & Formatiert \textit{<text>} als Code(d.h. monospaced) \\
+    \end{tabular} \\ %keep this linebreak, otherwise the bigskip underneath splits the following text in the middle
+    \onslide<3->
+    \bigskip
+    Außer den JavaDoc-Tags kann man den Text auch mit einfachen HTML-Tags(wie <p>, <i> etc.) formatieren.
+\end{frame}
+
+\subsection{Das JavaDoc-Tool}
+\begin{frame}[fragile]{Das JavaDoc-Tool}
+    Um aus einer Quelldatei eine funktionierende Dokumentation zu generieren, muss das Programm \texttt{javadoc} aufgerufen werden.
+    Ein Aufruf von \texttt{javadoc} kann folgendermaßen aussehen:
+    \begin{lstlisting}[language=bash,gobble=8]
+        # -d definiert das Zielverzeichnis
+        javadoc org.test.example org.test.database -d ./doc/ #packages
+
+        javadoc JavadocExample.java JavadocExercise.java -d ./doc/ #sourcefiles
+
+        javadoc [package] [quelldateien] [optionen] #allgemein
+    \end{lstlisting}
+\end{frame}
+
+\subsection{Übung}
+\begin{frame}{Übung}
+    \center
+    \large
+    Lade dir die Datei JavadocExercise.java aus dem Kurs-Repo herunter und vervollständige das Javadoc.
+    Der genaue Inhalt sollte dabei die Funktion wiedergeben.
+\end{frame}
+
+\begin{frame}{Weitere Themen}
+    \begin{itemize}[<+->]
+        \item Eine Zusammenfassung und Wiederholung der Kurse seit der letzten Wiederholung
+        \item Ein größeres praktisches Projekt(2 Termine)
+        \item Ein kurzer Einblick hinter die Kulissen von Java(sehr theoretisch)
+        \item Eine Einfühung zu Buildsystemen
+        \item AuD-Inhalte in Java umgesetzt(z.B. Bäume, Quicksort, Dijkstra)
+        \item Was sind Unit Tests und wie benutze ich sie?
+        \item Vorschläge von euch
+    \end{itemize}
+\end{frame}
 \end{document}

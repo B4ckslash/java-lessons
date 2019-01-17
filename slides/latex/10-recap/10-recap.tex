@@ -265,6 +265,42 @@
 \section{JavaDoc}
 
 \begin{frame}{JavaDoc}
+    \onslide<+->
+    \textit{JavaDoc} ist gleichzeitig die \enquote{Sprache} des Java-Dokusystems und das Tool, mit der die eigentliche Dokumentation generiert wird.
+    Javadoc verwendet sogenannte \textit{Tags}, um die Dokumentation zu formatieren.\\
+    \onslide<+->
+    Dazu wird in einem speziellen mehrzeiligen Kommentar(speziell, weil er mit \texttt{/**} beginnt) mithilfe der Tags Informationen zu Parametern,
+    Rückgabewerten etc. aufgeschrieben und anschließend vom Javadoc-Tool formatiert.\\
+    \onslide<+->
+    Einige übliche Tags und ihre Bedeutung:
+    \begin{tabular}{l | l}
+            \texttt{@author} & Gibt den Autor an \\
+            \texttt{@param} \textit{<name>} & Beschreibung v. Param. \textit{<name>} (nur Methoden)\\
+            \texttt{@return} & Beschreibung des Rückgabewertes (nur Methoden) \\
+            \texttt{@throws} \textit{<exception>} & Wann \textit{<exception>} auftritt (nur Methoden)\\
+            \texttt{\{@code} \textit{<text>}\texttt{\}} & Formatiert \textit{<text>} als Code(d.h. monospaced) \\
+        \end{tabular}
+\end{frame}
 
+\begin{frame}[fragile]{JavaDoc}
+    Eine Javadoc Beschreibung sieht z.B. so aus:
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        /**
+         * Generate a String which is formatted for logging output.
+         *
+         * @param name The name of the process.
+         * @param message The actual message to be printed.
+         * @param isError Whether the output should be marked as error.
+         *
+         * @return A String formatted as "[<time>] <name> <level> <message>"
+         */
+        public String getLogFormat(String name, String message, boolean isError) {
+            String msgLevel = isError ? "CRITICAL" : "INFO";
+            String ret = String.format("[%d] %s: %s: %s",
+                    System.nanoTime(),  name, msgLevel, message);
+            return ret;
+        }
+    \end{lstlisting}
+    \let\thefootnote\relax\footnote{Das Statement \texttt{<expr> ? <true> : <false>} ist eine Kurzform eines if-Statements}
 \end{frame}
 \end{document}

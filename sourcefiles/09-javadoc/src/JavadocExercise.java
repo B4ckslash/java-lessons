@@ -48,7 +48,7 @@ public class JavadocExercise {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public long subtract() {

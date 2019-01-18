@@ -8,7 +8,7 @@ public abstract class Person {
     private Position location;
 
     public Person(int age, int heightCm, Date birthday) {
-        //TODO: Throw exception when age or height < 0
+        //TODO: Throw IllegalArgumentException when age or height < 0
         this.age = age;
         this.heightCm = heightCm;
         this.birthday = birthday;
@@ -17,7 +17,7 @@ public abstract class Person {
 
     public int getHeightCm() { return this.heightCm; }
     public void setHeightCm(int heightCm) {
-        //TODO: Throw exception when height < 0
+        //TODO: Throw IllegalArgumentException when height < 0
         this.heightCm = heightCm;
     }
 

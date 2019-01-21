@@ -18,10 +18,4 @@ public class Node<T> {
         return this.leftChild;
     }
     public Node<T> getRightChild() { return this.rightChild; }
-
-    public static void main(String[] args) {
-        Node<Float> right = new Node<Float>(42f, null, null);
-        Node<Integer> left = new Node<>(1337, null, null);
-        Node<Integer> root = new Node(12, left, right);
-    }
 }

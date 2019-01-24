@@ -1,0 +1,324 @@
+\documentclass[10pt]{beamer}
+
+%theme
+\usetheme{metropolis}
+% packages
+\usepackage{color}
+\usepackage{listings}
+\usepackage[main=ngerman, USenglish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{csquotes}
+\usepackage{hyperref}
+
+% color definitions
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{paleorange}{HTML}{CC7832}
+
+\lstset{
+    backgroundcolor=\color{white},
+    % choose the background color;
+    % you must add \usepackage{color} or \usepackage{xcolor}
+    basicstyle=\footnotesize\ttfamily,
+    % the size of the fonts that are used for the code
+    breakatwhitespace=false,
+    % sets if automatic breaks should only happen at whitespace
+    breaklines=true,                 % sets automatic line breaking
+    captionpos=b,                    % sets the caption-position to bottom
+    commentstyle=\color{mygreen},    % comment style
+    % deletekeywords={...},
+    % if you want to delete keywords from the given language
+    extendedchars=true,
+    % lets you use non-ASCII characters;
+    % for 8-bits encodings only, does not work with UTF-8
+    frame=single,                    % adds a frame around the code
+    keepspaces=true,
+    % keeps spaces in text,
+    % useful for keeping indentation of code
+    % (possibly needs columns=flexible)
+    keywordstyle=\color{blue},       % keyword style
+    % morekeywords={*,...},
+    % if you want to add more keywords to the set
+    numbers=left,
+    % where to put the line-numbers; possible values are (none, left, right)
+    numbersep=5pt,
+    % how far the line-numbers are from the code
+    numberstyle=\tiny\color{mygray},
+    % the style that is used for the line-numbers
+    rulecolor=\color{black},
+    % if not set, the frame-color may be changed on line-breaks
+    % within not-black text (e.g. comments (green here))
+    stepnumber=1,
+    % the step between two line-numbers.
+    % If it's 1, each line will be numbered
+    stringstyle=\color{mymauve},     % string literal style
+    tabsize=4,                       % sets default tabsize to 4 spaces
+    % show the filename of files included with \lstinputlisting;
+    % also try caption instead of title
+    language = Java,
+	showspaces = false,
+	showtabs = false,
+	showstringspaces = false,
+	escapechar = ,
+        morecomment=[s][\textcolor{paleorange}]{@}{\ },
+}
+
+\def\ContinueLineNumber{\lstset{firstnumber=last}}
+\def\StartLineAt#1{\lstset{firstnumber=#1}}
+\let\numberLineAt\StartLineAt
+
+\newcommand{\codeline}[1]{
+        \alert{\texttt{#1}}
+}
+
+% Authors of the slides
+\author{Florian Pix}
+
+% Name of the Course
+\institute{Java-Kurs}
+
+% Presentation title
+\title{Unittests mit Java}
+\date{\today}
+
+% Fancy Logo
+\titlegraphic{\hfill\includegraphics[height=1.25cm]{../templates/fsr_logo_cropped}}
+
+\begin{document}
+
+\begin{frame}{Unittests mit Java}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Gliederung}
+	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents
+\end{frame}
+
+\begin{frame}[fragile]{Unittests}
+    \section{Unittests}
+\end{frame}
+
+\begin{frame}[fragile]{Unittests}
+    \textit{Unittests} sind Tests, die Einzelteile eures Programms überprüfen sollen. Sie können Teil ganzer \textit{Integrationstests} sein die das Zusammenspiel der einzelnen Einheiten (Units) 		              untersuchen. \\
+\end{frame}
+
+\begin{frame}[fragile]{Unittests}
+    \textit{JUnit} ist ein Framework für Java, dass wir zum Testen nutzen können. 
+\end{frame}
+
+\begin{frame}[fragile]{Unittests}
+    \textit{JUnit} ist ein Framework für Java, dass wir zum Testen nutzen können. 
+
+    Stand 20.Januar 2019, ist JUnit5 die aktuellste Version, \\
+    die auch im SWT Praktikum (3.Semester) genutzt wurde.
+
+    \url{https://junit.org/junit5/}
+\end{frame}
+
+\begin{frame}[fragile]{Unittests}
+    \textit{JUnit} ist ein Framework für Java, dass wir zum Testen nutzen können. 
+
+    Stand 20.Januar 2019, ist JUnit5 die aktuellste Version, \\
+    die auch im SWT Praktikum (3.Semester) genutzt wurde.
+
+    \url{https://junit.org/junit5/}
+    
+    Um es in euer Projekt einzubinden könnt ihr nach dem Download:
+
+    Eclipse: Project Properties\rightarrow Java Build Path \newline Libraries\rightarrow Add External JARs... 
+
+    IntelliJ: File\rightarrow Project Structure\rightarrow Modules \newline Dependencies\rightarrow + \rightarrow JARs or directories
+\end{frame}
+
+\begin{frame}[fragile]{Oft genutzte Funktionen}
+    \section{Oft genutzte Funktionen}
+\end{frame}
+
+\begin{frame}[fragile]{Oft genutzte Funktionen}
+    
+     \textcolor{mygreen}{\textbf{assertEquals()}} \\
+     \textcolor{mygreen}{\textbf{assertTrue()}} \\
+     \textcolor{mygreen}{\textbf{assertThrows()}} \\
+     \textcolor{mygreen}{\textbf{fail()}}
+
+    \href{{https://junit.org/junit5/docs/current/api/org/junit/jupiter/api/Assertions.html}}{Javadoc Assertions}
+\end{frame}
+
+\begin{frame}[fragile]{Oft genutzte Funktionen}
+     \textcolor{mygreen}{\textbf{assertEquals()}}
+
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        public class AClass{
+			AClass(){}
+		}	 
+		void testCalculate(){
+		int expected = 5;
+		int actual = AClass.add(2, 3);
+        assertEquals(expected, actual); 
+        }
+    \end{lstlisting}
+    Unser erwarteter Wert entspricht dem tatsächlichen, \newline 
+    also hat diese Einheit diesen Test bestanden.
+\end{frame}
+
+\begin{frame}[fragile]{Oft genutzte Funktionen}
+     \textcolor{mygreen}{\textbf{assertTrue()}}
+
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        public class AClass{
+			boolean noProblems = True;
+			AClass(){}
+			...
+			public importantFunction(...);
+		}	
+		...
+		AClass aClass = new AClass();
+		...
+		void testCalculate(){	
+			AClass.importantFunction(...);
+        	assertTrue(AClass.getNoProblems()); 
+        }
+    \end{lstlisting}
+    Wenn importantFunction() unsere Flag nicht ändert,  besteht die Unit den Test.
+\end{frame}
+
+\begin{frame}[fragile]{Oft genutzte Funktionen}
+     \textcolor{mygreen}{\textbf{assertThrows()}}
+    
+    Wir wollen testen ob eine Funktion unter bestimmten Bedingungen eine Exception wirft.
+
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        assertThrows(AClass.throw());     
+    \end{lstlisting}
+    Wenn throw() eine Exception wirft, besteht die Einheit den Test.
+\end{frame}
+
+\begin{frame}[fragile]{Oft genutzte Funktionen}
+     \textcolor{mygreen}{\textbf{fail()}}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        void testSomething(){
+			int result = AClass.aFunction();
+			if(result < 4.0){
+				fail("Result should be above 4.0");
+			}
+		}     
+    \end{lstlisting}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        void testSomething(){
+			try{
+				AClass.bFunction();
+			} catch (SomethingWentTerriblyWrongException() e) {
+				fail("Something went terribly wrong");
+			}
+		}     
+    \end{lstlisting}
+    Wenn man beim Durchlaufen des Tests auf ein fail() trifft, schlägt er fehl.
+\end{frame}
+
+\begin{frame}[fragile]{Annotations}
+    \section{Annotations}
+\end{frame}
+
+\begin{frame}[fragile]{Annotations}
+    \textcolor{mygreen}{\textbf{@Test}}\\
+    \textcolor{mygreen}{\textbf{@BeforeAll, @AfterAll}}\\
+    \textcolor{mygreen}{\textbf{@BeforeEach, @AfterEach}}\\
+\end{frame}
+
+\begin{frame}[fragile]{Annotations}
+     \textcolor{mygreen}{\textbf{@Test}}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+    	@Test		
+    	public void test1() {					
+            list.add("test");					
+            assertFalse(list.isEmpty());			
+            assertEquals(1, list.size());			
+    	}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Annotations}
+     \textcolor{mygreen}{\textbf{@BeforeAll, @AfterAll}}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+    	@BeforeAll		
+    	public static void setUpAll() {							
+            System.out.println
+            ("@BeforeAll , wird vor allen TestCases einmal ausgefuehrt.");					
+    	}
+
+    	@AfterAll
+    	public static void cleanUpAll() {							
+            System.out.println
+            ("@AfterAll ,wird nach allen TestCases einmal ausgefuehrt.");					
+    	}		
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Annotations}
+     \textcolor{mygreen}{\textbf{@BeforeEach, @AfterEach}}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+
+    	@BeforeEach		
+    	public void setUpEach() {					
+        	list = new ArrayList<String>();					
+        	System.out.println
+                ("@BeforeEach ,wird vor jedem einzelnen TestCase ausgefuehrt.");					
+    	}
+
+    	@AfterEach
+    	public void cleanUpAfterEach() {					
+        	list.clear();			
+        	System.out.println
+                ("@AfterEach, wird nach jedem einzelnen TestCase ausgefuehrt.");					
+    	}				
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Annotations}
+    \textcolor{mygreen}{\textbf{@ParameterizedTest,@RepeatedTest}}
+    
+    \begin{quote}
+    Tests können wiederholt ausgeführt werden, sogar mit unterschiedlichen Parametern.
+    \end{quote}
+    \textcolor{mygreen}{\textbf{@DisplayName}}
+
+    \begin{quote}
+    Testklassen und -methoden können eigene Namen mit Leerzeichen, Sonderzeichen und sogar Emojis haben.
+    \end{quote}
+
+    \href{https://dzone.com/articles/junit-5-annotations-with-examples-1}{Weitere tolle Annotations}\\
+\end{frame}
+
+\begin{frame}[fragile]{Testrunner}
+    \section{Testrunner}
+\end{frame}
+
+\begin{frame}[fragile]{Testrunner}
+    Entweder nutzt ihr den in eurer IDE eingebauten Testrunner, \newline
+    oder schreibt euch einen eigenen.
+
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
+        import org.junit.runner.JUnitCore;
+        import org.junit.runner.Result;	
+        import org.junit.runner.notification.Failure;
+        public class TestRunner {
+            public static void main(String[] args) {
+                Result result = JUnitCore.runClasses
+                                     (JunitAnnotationsExample.class);
+                for (Failure failure : result.getFailures()) {
+                     System.out.println(failure.toString());
+                }
+                System.out.println("Result = " + result.wasSuccessful());
+            }		
+        }      	
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Demo und Aufgabe}
+    \section{Demo und Aufgabe}
+\end{frame}
+
+\end{document}

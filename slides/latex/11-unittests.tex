@@ -191,9 +191,12 @@
     Wir wollen testen ob eine Funktion unter bestimmten Bedingungen eine Exception wirft.
 
     \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8]
-        assertThrows(AClass.throw());     
+        Executable codeToTest = () -> new Person("","");
+    	assertThrows(IllegalArgumentException.class, codeToTest,
+    			"The constructor of the person class did not throw an IllegalArgumentException,"
+    			+ "when given an empty string as forename parameter.");
     \end{lstlisting}
-    Wenn throw() eine Exception wirft, besteht die Einheit den Test.
+    Wenn codeToTest eine Exception wirft, besteht die Einheit den Test.
 \end{frame}
 
 \begin{frame}[fragile]{Oft genutzte Funktionen}

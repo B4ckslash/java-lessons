@@ -6,7 +6,7 @@ public class TaxiTest_ToFill {
 
     //TODO: declare some human test subjects and a taxi
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
     	
     	/*
@@ -41,7 +41,7 @@ public class TaxiTest_ToFill {
          * add() should behave like this:
          * 
          * Each taxi can transport up to four passengers plus its driver. The Taxi class has the method add(Human x) to add a new passenger. 
-         * If the taxi is full, the method doesn’t add the passenger
+         * If the taxi is full, the method doesnâ€™t add the passenger
          * Then it should print: 
          * "We are sorry, Lucky Luke. The taxi is full." 
          * Otherwise the passenger is added and another message is printed:

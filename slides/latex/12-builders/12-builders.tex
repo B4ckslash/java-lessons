@@ -1,0 +1,203 @@
+\input{../templates/course_definitions.tex}
+\input{../templates/course_information.tex}
+
+\usepackage{csquotes}
+\usepackage{dirtree}
+
+\title{Java}
+\subtitle{Buildsysteme}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Überblick}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \tableofcontents
+\end{frame}
+
+\section{Buildsysteme}
+\subsection{Warum Buildsysteme?}
+
+\begin{frame}{Warum Buildsysteme?}
+    \onslide<+->
+    Der Java-Compiler \texttt{javac} hat eine riesige Menge an Optionen, die nötig sind, um größere Programme mit mehreren Verzeichnissen zu verarbeiten.
+    Allerdings heißt das auch, dass für große Projekte entsprechend lange Compiler-Aufrufe nötig sind.\\
+    \onslide<+->
+    Dazu kommt noch das sogenannte \textit{Dependency management}, d.h. das Management von benötigten Bibliotheken etc., was von Hand nur schwer umzusetzen ist.\\
+    \onslide<+->
+    Um das alles weitestgehend zu automatisieren, wurden Buildsysteme geschrieben. Sie sorgen automatisiert dafür, dass:
+    \begin{itemize}[<+->]
+        \item Alle nötigen Bibliotheken und Ressourcen verfügbar sind
+        \item Unit- \& Integrationtests ausgeführt werden, sofern vorhanden
+        \item Der Code korrekt kompiliert wird
+        \item Das fertige Programm quasi \enquote{Release-fertig} gemacht wird
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Einstellungen}
+    Allen Buildsystemen ist gemein, dass die Einstellungen, wie ein Projekt gebaut werden muss, in einer zentralen Datei gespeichert sind. Hierzu gehören u.a.:
+    \begin{itemize}[<+->]
+        \item Der Name \& die Version des Projekts
+        \item In welchen Verzeichnissen Quelldateien und Ressourcen zu finden sind
+        \item Welche Dependencies gebraucht werden
+        \item Wie das Programm gepackt werden muss
+        \item \dots
+    \end{itemize}
+    \onslide<+->
+    Allerdings ist von System zu System unterschiedlich, wie genau das alles abgespeichert wird; dazu später mehr.
+\end{frame}
+
+\subsection{Lifecycles}
+\begin{frame}[fragile]{Lifecycles}
+    \onslide<+->
+    Der \textit{Lifecycle} eines Programms ist(im Kontext von Buildsystemen) die Folge von Prozessen, die für ein gewünschtes Ziel notwendig sind.
+    Die Buildsysteme, mit denen wir uns heute beschäftigen, haben in etwa den gleichen \texttt{default}-Lifecycle:\\
+    \onslide<+->
+    \begin{tabular}{ l | l }
+        \texttt{validate} & Prüfen, ob alle notwendigen nformationen vorhanden sind\\
+        \texttt{compile} & Den Quellcode kompilieren\\
+        \texttt{test} & ggf. Tests ausführen\\
+        \texttt{package} & Das Programm in ein JAR-Archiv packen\\
+        \texttt{verify} & Die Ergebnisse der \texttt{test}-Phase überprüfen\\
+        \texttt{install} & Das Programm in ein Zielverzeichnis kopieren\\
+        \texttt{deploy} & Das fertige Programm in ein Repository hochladen\\
+    \end{tabular}
+\end{frame}
+
+\section{Maven}
+\subsection{Was ist Maven?}
+
+\begin{frame}[fragile]{Was ist Maven?}
+    \onslide<+->
+    \textit{Maven} ist ein Buildsystem von der Apache-Foundation, welches der Nachfolger von \textit{Ant} ist. Mavens Build-Datei(d.h. die Einstellungen) ist in XML geschrieben.
+    \onslide<+->
+    Maven wird folgendermaßen aufgerufen(hierzu muss man im Verzeichnis sein, in dem die Build-Datei liegt):
+    \begin{lstlisting}[gobble=8]
+        mvn <target>
+        ODER
+        mvn <plugin>:<target>
+    \end{lstlisting}
+    Wobei \textit{<target>} eine der vorhin genannten Phasen eines Lifecycles und \textit{<plugin>} eines von Mavens Plugins ist.\\
+    \onslide<+->
+    Maven führt dann alle Phasen aus, die im zugehörigen Lifecycle bis hin zu \textit{<target>} vorkommen.
+\end{frame}
+
+\begin{frame}[fragile]{Maven-Verzeichnisstruktur}
+    Sofern nicht anders in der Build-Datei angegeben, geht Maven von der folgenden Verzeichnisstruktur innerhalb des Projekts aus:
+    \dirtree{%
+    .1 <project>.
+    .2 pom.xml(Build-info).
+    .2 src.
+    .3 main.
+    .4 java.
+    .5 <sourcecode>.
+    .4 resources.
+    .3 test.
+    .4 java.
+    .5 <test-sources>.
+    .4 resources.
+    .2 out(Compiled classes).
+    }
+\end{frame}
+
+\subsection{Die \texttt{pom.xml}}
+
+\begin{frame}[fragile]{Die \texttt{pom.xml}}
+    \onslide<+->
+    Die Build-Datei von Maven heißt für gewöhnlich \texttt{pom.xml}. In ihr sind(in XML) alle Informationen zum Build abgespeichert,
+    die von der sogenannten \textit{Master-POM} abweichen.
+    Die Master-POM ist sozusagen die Standardkonfiguration von Maven, die alle nicht explizit angegebenen Informationen zum Build liefert.\\
+    \onslide<+->
+    Eine \enquote{leere} \texttt{pom.xml} sieht folgendermaßen aus:
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8,language=xml]
+        <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+
+          <groupId>com.mycompany.app</groupId> <!-- Basic info -->
+          <artifactId>my-app</artifactId>
+          <version>1.0-SNAPSHOT</version>
+        </project>
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Die \texttt{pom.xml}}
+    \onslide<+->
+    In Maven hat ein Projekt immer eine \texttt{groupId}, welche mehrere Projekte zu einer \textit{Gruppe} zusammenfassen, und eine \texttt{ArtifactId}, welche das genaue Projekt identifiziert.\\
+    \onslide<+->
+    In der \texttt{pom.xml} werden normalerweise außer Basisinfos noch Java-Versionen und Dependencies angegeben:
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,gobble=8,language=xml]
+        <properties>
+            <maven.compiler.source>1.7</maven.compiler.source> <!-- Define Java version -->
+            <maven.compiler.target>1.7</maven.compiler.target>
+        </properties>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupid>        <!-- Define Dependency -->
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+            </dependency>
+        </dependencies>
+    \end{lstlisting}
+\end{frame}
+
+\section{Gradle}
+\subsection{Was ist Gradle?}
+\begin{frame}[fragile]{Was ist Gradle?}
+    \onslide<+->
+    \textit{Gradle} ist ein Buildsystem, welches eine eigene Sprache auf Basis von Groovy für die Build-Datei verwendet.
+    Der Vorteil von dieser Herangehensweise ist, dass die Build-Dateien um einiges kürzer sind, als das Maven-Äquivalent.
+    Allerdings verwendet Gradle die gleiche Standard-Verzeichnisstruktur wie Maven.\\
+    \onslide<+->
+    Gradle wird folgendermaßen aufgerufen:
+    \begin{lstlisting}[gobble=8]
+        gradle <task>
+    \end{lstlisting}
+    Wobei \textit{<task>} das Gradle-Äquivalent von Maven-Targets ist. Welche Tasks verfügbar sind, kann mit \texttt{gradle tasks} angezeigt werden.
+\end{frame}
+
+\subsection{Die \texttt{build.gradle}}
+\begin{frame}[fragile]{Die \texttt{build.gradle}}
+    \onslide<+->
+    Gradle speichert seine Einstellungen in einer Datei namens \texttt{build.gradle} ab, wobei eine eigene Sprache auf Basis von Groovy verwendet wird(Syntaxdetails werden hier nicht weiter erklärt).
+    \onslide<+->
+    Eine \enquote{leere} \texttt{build.gradle} für Java besteht nur aus einer Zeile:
+    \begin{lstlisting}[gobble=8]
+        apply plugin: 'java'
+    \end{lstlisting}
+    \onslide<+->
+    Dies lädt alle Java-spezifischen Einstellungen und Konventionen, wie sie von Maven vorgegeben sind.
+\end{frame}
+
+\begin{frame}[fragile]{Dependencies}
+    \onslide<+->
+    Das Dependency-Management in Gradle funktioniert fast genauso wie in Maven, d.h. man sagt, was man braucht und Gradle erledigt, soweit möglich, den Rest.\\
+    \onslide<+->
+    Anders als bei Maven muss man neben der Dependency an sich noch ein Repository angegeben werden, in dem danach gesucht werden soll:
+    \begin{lstlisting}[gobble=8]
+        repositories{
+            mavenCentral(); //The maven repo
+        }
+        dependencies{
+            test 'junit:junit:4.1.2' //require jUnit for the test phase
+        }
+    \end{lstlisting}
+    \onslide<+->
+    Dependencies werden, wie bei Maven auch, für bestimmte Phasen definiert, wobei die Syntax folgendermaßen aussieht:
+    \begin{lstlisting}[gobble=8]
+        dependencies{
+            <phase> '<groupId>:<artifactId>:<version>'
+        }
+    \end{lstlisting}
+\end{frame}
+
+\section{Demo}
+\begin{frame}
+    \center\huge{DEMO}
+\end{frame}
+
+\end{document}
